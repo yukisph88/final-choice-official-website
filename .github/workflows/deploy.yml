@@ -1,0 +1,52 @@
+# Builds the website, runs the quality checks and publishes to GitHub Pages on every push to "main".
+# If a check fails, the live site keeps the previous version.
+name: Build and deploy website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # Preview on the GitHub Pages project URL. For a custom domain, set repository variables
+  # SITE_URL=https://www.your-domain.com and BASE_PATH=/  (Settings > Secrets and variables > Actions > Variables)
+  SITE_URL: ${{ vars.SITE_URL || 'https://yukisph88.github.io' }}
+  BASE_PATH: ${{ vars.BASE_PATH || '/final-choice-official-website' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Quality checks (titles, headings, canonicals, hreflang, links, images, structured data, sitemap)
+        run: npm run test:site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

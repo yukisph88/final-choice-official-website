@@ -1,0 +1,36 @@
+# build output
+dist/
+.astro/
+node_modules/
+
+# environment / secrets — never commit
+.env
+.env.*
+!.env.example
+
+# private candidate documents must never be added to this public repository
+private/
+*.passport.*
+*_unredacted*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# original photographs dropped in by staff — never upload to the public repository
+photo-inbox/
+
+# local tooling and review screenshots (not part of the website)
+.claude/
+_review-screenshots/
+
+# PRIVATE maid biodata, passports, consent forms, import staging and archive — never upload
+private-biodata/
+
+# staff spreadsheets and stray backup folders (may contain maid names) — never upload
+*.xlsx
+*.xls
+/backups/

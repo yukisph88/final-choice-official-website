@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { href, asset, whatsappLink } from '../lib/urls';
+import { path, pathOrHome, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { shortLabel } from '../i18n/labels';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = t(lang);
+const F = T.footer;
+const c = site.company;
+const year = new Date().getFullYear();
+const hours = c.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ');
+const L = (k: PageKey) => ({ url: href(pathOrHome(lang, k)), label: shortLabel(k, lang) });
+const fwKeys: PageKey[] = ['fw', 'fwQuota', 'fw60k', 'fwcms', 'fwRenewal', 'fwDocs', 'fwManufacturing', 'fwConstruction', 'fwServices', 'fwPlantation', 'fwAgriculture'];
+const maidKeys: PageKey[] = ['maid', 'maidIndonesian', 'maidFilipino', 'maidBiodata', 'maidChildcare', 'maidElderly', 'maidRenewal', 'maidProcess'];
+const coKeys: PageKey[] = ['about', 'faq', 'contact', 'privacy'];
+// In Malay, list only pages that exist in Malay, so the footer never sends a Malay reader to an English page.
+import { hasLang } from '../i18n/routes';
+const show = (keys: PageKey[]) => keys.filter((k) => hasLang(k, lang));
+---
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href={href(path(lang, 'home'))} class="footer-logo" aria-label={`Final Choice — ${T.nav.home}`}>
+        <picture>
+          <source srcset={asset('images/logo-final-choice.webp')} type="image/webp" />
+          <img src={asset('images/logo-final-choice.png')} alt="Agensi Pekerjaan Final Choice Sdn Bhd logo" width="720" height="537" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="site-footer__legal">
+        <strong>{c.legalName}</strong><br />
+        {F.companyNo} {c.registrationNo}<br />
+        {F.licence}: {c.licence}
+      </p>
+    </div>
+
+    <div>
+      <h2 class="site-footer__h">{F.fw}</h2>
+      <ul class="site-footer__links">{show(fwKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
+    </div>
+    <div>
+      <h2 class="site-footer__h">{F.maid}</h2>
+      <ul class="site-footer__links">{show(maidKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
+    </div>
+    <div>
+      <h2 class="site-footer__h">{F.company}</h2>
+      <ul class="site-footer__links">{show(coKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
+    </div>
+
+    <div class="site-footer__contact">
+      <h2 class="site-footer__h">{F.contact}</h2>
+      <ul class="contact-list">
+        <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener" data-track="whatsapp_footer_fw">{T.strip.fw}: {site.contact.fw.display}</a></li>
+        <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener" data-track="whatsapp_footer_maid">{T.strip.maid}: {site.contact.maid.display}</a></li>
+        <li><Icon name="mail" size={18} /><a href={`mailto:${c.email}`}>{c.email}</a></li>
+        <li><Icon name="pin" size={18} /><a href={c.mapsUrl} target="_blank" rel="noopener">{c.address.street}, {c.address.postcode} {c.address.city}</a></li>
+        <li><Icon name="clock" size={18} /><span>{hours}</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <div class="container">
+      <p>© {year} {c.legalName}. {F.rights}</p>
+      <p>{F.disclaimer}</p>
+    </div>
+  </div>
+</footer>

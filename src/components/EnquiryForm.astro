@@ -1,0 +1,223 @@
+---
+// Enquiry form for one line (foreign workers or maids). GitHub Pages has no server, so by default the form
+// composes a WhatsApp message in the page's language and opens WhatsApp; the visitor then presses Send.
+// It never claims an enquiry was "received" unless an optional form service (site.forms) confirms receipt.
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { href } from '../lib/urls';
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+interface Props { lang: Lang; track: 'fw' | 'maid'; idPrefix?: string }
+const { lang, track, idPrefix = track } = Astro.props;
+const F = t(lang).form;
+const id = (s: string) => `${idPrefix}-${s}`;
+const usesService = Boolean(site.forms.endpoint);
+const line = site.contact[track];
+const i18n = JSON.stringify({ ...F, intro: track === 'fw' ? F.msgFw : F.msgMaid });
+const title = track === 'fw' ? F.fwTitle : F.maidTitle;
+---
+<form class="enquiry-form" novalidate data-enquiry data-track={track} data-wa={line.wa} data-endpoint={site.forms.endpoint} data-key={site.forms.accessKey} data-i18n={i18n} aria-labelledby={id('title')}>
+  <h3 id={id('title')} class="enquiry-form__title">{title}</h3>
+  <div class="form-grid">
+    <div class="field">
+      <label for={id('name')}>{F.name} <span class="req" aria-hidden="true">*</span></label>
+      <input id={id('name')} name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby={id('name-err')} />
+      <p class="field__error" id={id('name-err')} data-error-for="name"></p>
+    </div>
+    {track === 'fw' && (
+      <div class="field">
+        <label for={id('company')}>{F.company} <span class="req" aria-hidden="true">*</span></label>
+        <input id={id('company')} name="company" type="text" autocomplete="organization" required maxlength="120" aria-describedby={id('company-err')} />
+        <p class="field__error" id={id('company-err')} data-error-for="company"></p>
+      </div>
+    )}
+    <div class="field">
+      <label for={id('phone')}>{F.phone} <span class="req" aria-hidden="true">*</span></label>
+      <input id={id('phone')} name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder={F.phonePh} aria-describedby={id('phone-err')} />
+      <p class="field__error" id={id('phone-err')} data-error-for="phone"></p>
+    </div>
+    <div class="field">
+      <label for={id('email')}>{F.email}</label>
+      <input id={id('email')} name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" aria-describedby={id('email-err')} />
+      <p class="field__error" id={id('email-err')} data-error-for="email"></p>
+    </div>
+
+    {track === 'fw' ? (
+      <>
+        <div class="field">
+          <label for={id('industry')}>{F.industry}</label>
+          <select id={id('industry')} name="industry">
+            <option value="">{F.choose}</option>
+            {F.industries.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for={id('workers')}>{F.workers}</label>
+          <input id={id('workers')} name="workers" type="number" inputmode="numeric" min="1" max="9999" />
+        </div>
+        <div class="field field--full">
+          <label for={id('service')}>{F.service}</label>
+          <select id={id('service')} name="service">
+            <option value="">{F.choose}</option>
+            {F.fwServices.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+      </>
+    ) : (
+      <>
+        <div class="field">
+          <label for={id('nat')}>{F.nationality}</label>
+          <select id={id('nat')} name="nationality">
+            <option value="">{F.noPref}</option>
+            <option value={lang === 'bm' ? 'Indonesia' : 'Indonesian'}>{lang === 'bm' ? 'Indonesia' : 'Indonesian'}</option>
+            <option value={lang === 'bm' ? 'Filipina' : 'Filipino'}>{lang === 'bm' ? 'Filipina' : 'Filipino'}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for={id('need')}>{F.needs}</label>
+          <select id={id('need')} name="need">
+            <option value="">{F.choose}</option>
+            {F.maidNeeds.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for={id('location')}>{F.location}</label>
+          <input id={id('location')} name="location" type="text" maxlength="80" />
+        </div>
+        <div class="field">
+          <label for={id('timing')}>{F.timing}</label>
+          <select id={id('timing')} name="timing">
+            <option value="">{F.choose}</option>
+            {F.timings.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for={id('household')}>{F.household}</label>
+          <input id={id('household')} name="household" type="text" maxlength="200" placeholder={F.householdPh} />
+        </div>
+      </>
+    )}
+
+    <div class="field field--full">
+      <label for={id('msg')}>{F.message}</label>
+      <textarea id={id('msg')} name="message" rows="3" maxlength="1000" placeholder={F.messagePh}></textarea>
+    </div>
+    <div class="hp" aria-hidden="true">
+      <label for={id('website')}>{F.honeypot}</label>
+      <input id={id('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <div class="field field--full">
+      <label class="check check--consent">
+        <input type="checkbox" name="consent" required aria-describedby={id('consent-err')} />
+        <span>{F.consent} <a href={href(path(lang, 'privacy'))}>{F.privacy}</a>. <span class="req" aria-hidden="true">*</span></span>
+      </label>
+      <p class="field__error" id={id('consent-err')} data-error-for="consent"></p>
+    </div>
+  </div>
+  <button class="btn btn--wa btn--lg" type="submit" data-submit>
+    <Icon name="whatsapp" size={20} /> {usesService ? F.submit : F.submitWa}
+  </button>
+  <p class="form-hint">{usesService ? F.hint : F.hintWa}</p>
+  <div class="form-status" role="status" aria-live="polite" data-status></div>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-enquiry]').forEach((form) => {
+    const L = JSON.parse(form.dataset.i18n || '{}');
+    const track = form.dataset.track || 'fw';
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const err = (name: string, msg: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      const input = form.elements.namedItem(name) as HTMLInputElement | null;
+      if (el) el.textContent = msg;
+      input?.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      return !msg;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      const fd = new FormData(form);
+      const v = (k: string) => String(fd.get(k) ?? '').trim();
+      if (v('website')) return; // spam bot filled the hidden field
+
+      const phoneDigits = v('phone').replace(/[^\d+]/g, '');
+      const checks = [
+        err('name', v('name').length >= 2 ? '' : L.errName),
+        err('phone', /^\+?\d{9,13}$/.test(phoneDigits) ? '' : L.errPhone),
+        err('email', !v('email') || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')) ? '' : L.errEmail),
+        err('consent', fd.get('consent') ? '' : L.errConsent),
+      ];
+      if (track === 'fw') checks.push(err('company', v('company').length >= 2 ? '' : L.errCompany));
+      if (!checks.every(Boolean)) {
+        (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
+        return;
+      }
+
+      const lines = (track === 'fw'
+        ? [
+            L.intro,
+            `${L.lName}: ${v('name')}`,
+            `${L.lCompany}: ${v('company')}`,
+            `${L.lPhone}: ${v('phone')}`,
+            v('email') && `${L.lEmail}: ${v('email')}`,
+            v('industry') && `${L.lIndustry}: ${v('industry')}`,
+            v('workers') && `${L.lWorkers}: ${v('workers')}`,
+            v('service') && `${L.lService}: ${v('service')}`,
+            v('message') && `${L.lMessage}: ${v('message')}`,
+          ]
+        : [
+            L.intro,
+            `${L.lName}: ${v('name')}`,
+            `${L.lPhone}: ${v('phone')}`,
+            v('email') && `${L.lEmail}: ${v('email')}`,
+            v('nationality') && `${L.lNat}: ${v('nationality')}`,
+            v('need') && `${L.lNeed}: ${v('need')}`,
+            v('location') && `${L.lLocation}: ${v('location')}`,
+            v('timing') && `${L.lTiming}: ${v('timing')}`,
+            v('household') && `${L.lHousehold}: ${v('household')}`,
+            v('message') && `${L.lMessage}: ${v('message')}`,
+          ]
+      ).filter(Boolean) as string[];
+      const summary = lines.join('\n');
+
+      // Duplicate protection: the same message cannot be sent twice within a minute, and the button locks briefly.
+      let sig = '';
+      try {
+        sig = `fc-last-${track}`;
+        const prev = JSON.parse(sessionStorage.getItem(sig) || 'null') as { s: string; t: number } | null;
+        if (prev && prev.s === summary && Date.now() - prev.t < 60000) { status.textContent = L.duplicate; return; }
+      } catch { /* sessionStorage unavailable: carry on */ }
+      const remember = () => { try { sessionStorage.setItem(sig, JSON.stringify({ s: summary, t: Date.now() })); } catch { /* ignore */ } };
+      const lock = (ms: number) => { submitBtn.disabled = true; setTimeout(() => { submitBtn.disabled = false; }, ms); };
+
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        status.textContent = L.sending;
+        lock(8000);
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ access_key: form.dataset.key, subject: `Website enquiry (${track}) – Final Choice`, botcheck: '', ...Object.fromEntries(fd), summary }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          status.textContent = L.received;
+          remember();
+          form.reset();
+        } catch {
+          status.textContent = L.failed;
+        }
+        return;
+      }
+
+      // No server endpoint: hand off to WhatsApp. This is NOT a submission until the visitor presses Send there.
+      window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(summary)}`, '_blank', 'noopener');
+      status.textContent = L.opened;
+      remember();
+      lock(5000);
+      (window as unknown as { dataLayer?: object[] }).dataLayer?.push({ event: 'form_whatsapp_handoff', line: track });
+    });
+  });
+</script>

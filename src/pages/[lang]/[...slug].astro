@@ -1,0 +1,23 @@
+---
+// Generates every page in English (/en/...) and Bahasa Melayu (/bm/...) at build time.
+// URLs come from src/i18n/routes.ts; page content lives in src/content/.
+import Home from '../../views/Home.astro';
+import ContentPage from '../../views/ContentPage.astro';
+import { LANGS, PAGE_KEYS, hasLang, slugOf, type Lang, type PageKey } from '../../i18n/routes';
+import { validateContent } from '../../content';
+
+export function getStaticPaths() {
+  validateContent();
+  const paths: { params: { lang: Lang; slug: string | undefined }; props: { key: PageKey; lang: Lang } }[] = [];
+  for (const lang of LANGS) {
+    for (const key of PAGE_KEYS) {
+      if (!hasLang(key, lang)) continue;
+      paths.push({ params: { lang, slug: slugOf(key, lang) || undefined }, props: { key, lang } });
+    }
+  }
+  return paths;
+}
+
+const { key, lang } = Astro.props;
+---
+{key === 'home' ? <Home lang={lang} /> : <ContentPage lang={lang} pageKey={key} />}

@@ -1,0 +1,108 @@
+---
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/montserrat/700.css';
+import '@fontsource/montserrat/800.css';
+import '../styles/global.css';
+import '../styles/site.css';
+// Preload the two fonts used above the fold so headings don't re-wrap when fonts arrive (layout shift).
+import fontHeading from '@fontsource/montserrat/files/montserrat-latin-800-normal.woff2?url';
+import fontBody from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../data/site';
+import { absUrl, asset } from '../lib/urls';
+import { breadcrumbSchema, organizationSchema, websiteSchema, type Crumb } from '../lib/schema';
+import { HTML_LANG, OG_LOCALE, LANGS, PAGES, path, alternatesFor, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  pageKey: PageKey;
+  title: string;
+  description: string;
+  crumbs?: Crumb[]; // excluding Home
+  schema?: object[];
+  ogImage?: string;
+  noindex?: boolean;
+  preloadImage?: string;
+  waMessage: string;
+}
+
+const { lang, pageKey, title, description, crumbs, schema = [], ogImage, noindex = false, preloadImage, waMessage } = Astro.props;
+const T = t(lang);
+const pagePath = path(lang, pageKey);
+const alternates = alternatesFor(pageKey);
+const group = PAGES[pageKey].group;
+const track = group === 'main' ? 'main' : group;
+const canonical = absUrl(pagePath); // always self-referencing: Malay pages are never canonicalised to English
+const image = new URL(asset(ogImage ?? site.seo.defaultOgImage), Astro.site).toString();
+const needsApproval = pageKey === 'privacy' && !site.seo.privacyPolicyApproved;
+const indexable = site.seo.indexing && !noindex && !needsApproval;
+// hreflang only between pages that genuinely exist in both languages
+const hasBoth = LANGS.every((l) => alternates[l]);
+const allCrumbs = crumbs ? [{ name: T.crumb.home, path: path(lang, 'home') }, ...crumbs] : null;
+const isHome = pageKey === 'home';
+const jsonLd = [...(isHome ? [organizationSchema(lang), websiteSchema(lang)] : []), ...schema, ...(allCrumbs ? [breadcrumbSchema(allCrumbs)] : [])];
+---
+<!doctype html>
+<html lang={HTML_LANG[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {hasBoth && LANGS.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={absUrl(alternates[l]!)} />)}
+    {hasBoth && <link rel="alternate" hreflang="x-default" href={absUrl(alternates.en!)} />}
+    <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
+    {site.seo.googleSiteVerification && <meta name="google-site-verification" content={site.seo.googleSiteVerification} />}
+    <meta name="theme-color" content="#0a1a5c" />
+    <link rel="preload" href={fontHeading} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontBody} as="font" type="font/woff2" crossorigin />
+    {preloadImage && <link rel="preload" as="image" href={asset(preloadImage)} fetchpriority="high" />}
+    <link rel="icon" href={asset('favicon/favicon-48.png')} sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href={asset('favicon/apple-touch-icon.png')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.company.brandName} />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
+    {hasBoth && LANGS.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l]} />)}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{T.nav.skip}</a>
+    <Header lang={lang} currentPath={pagePath} alternates={alternates} track={track} />
+    <main id="main">
+      {allCrumbs && <Breadcrumbs crumbs={allCrumbs} label={T.crumb.label} />}
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <WhatsAppFloat lang={lang} line={track === 'maid' ? 'maid' : 'fw'} message={waMessage} />
+    <script>
+      // Scroll reveal: only when motion is allowed and IntersectionObserver exists. Without it, content is simply visible.
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if (items.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reveal-ready');
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

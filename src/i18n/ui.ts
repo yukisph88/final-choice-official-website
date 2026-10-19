@@ -1,0 +1,101 @@
+// Interface text in both languages: navigation, buttons, footer, forms, WhatsApp starter messages.
+import type { Lang } from './routes';
+
+const en = {
+  nav: { skip: 'Skip to main content', main: 'Main menu', menu: 'Menu', language: 'Language', switchTo: 'Switch language', home: 'Home', fw: 'Foreign Workers', maid: 'Maid Agency', about: 'About', faq: 'FAQ', contact: 'Contact' },
+  crumb: { home: 'Home', label: 'Breadcrumb' },
+  strip: { licensed: 'Licensed agency', fw: 'Foreign workers', maid: 'Maid enquiries' },
+  btn: {
+    hireFw: 'Hire Foreign Workers', findMaid: 'Find a Domestic Helper', whatsapp: 'WhatsApp', whatsappUs: 'WhatsApp Us', call: 'Call',
+    checkReq: 'Check Your Company Requirements', enquireFw: 'Enquire About Foreign Workers', speakConsultant: 'Speak to Our Consultant',
+    viewBiodata: 'View Maid Biodata', requestBiodata: 'Request Available Biodata', whatsappConsultant: 'WhatsApp Our Consultant',
+    learnMore: 'Learn more', read: 'Read more',
+  },
+  hours: { weekdays: 'Mon–Fri', saturday: 'Sat', closed: 'Sun & public holidays: closed' },
+  wa: {
+    fwHome: 'Hello Final Choice, I would like to enquire about foreign workers for my company.',
+    maidHome: 'Hello Final Choice, I would like to enquire about hiring a domestic helper.',
+    general: 'Hello Final Choice, I would like to enquire about your services.',
+    float: 'Chat with Final Choice on WhatsApp', floatLabel: 'WhatsApp',
+  },
+  cta: { fwTitle: 'Tell us about your company and the workers you need', fwText: 'Send your sector, job position and number of workers. Our consultant will explain which requirements may apply before you commit to anything.', maidTitle: 'Tell us about your household', maidText: 'Share who needs care, the main duties and your preferred nationality. We will share suitable biodata and explain the steps.', generalTitle: 'Not sure where to start?', generalText: 'Choose the line that fits your need, or ask us. There is no obligation to proceed after your first conversation.' },
+  footer: {
+    companyNo: 'Company No.', licence: 'Agency licence', fw: 'Foreign Workers', maid: 'Domestic Helpers', company: 'Company', contact: 'Contact',
+    rights: 'All rights reserved.',
+    disclaimer: 'Final Choice assists with recruitment, documentation and application preparation. Approval decisions are made by the relevant Malaysian authorities; processing times cannot be guaranteed.',
+    wa: 'WhatsApp', tagline: 'Licensed employment agency, Kuala Lumpur.',
+  },
+  form: {
+    fwTitle: 'Foreign worker enquiry', maidTitle: 'Domestic helper enquiry',
+    name: 'Your name', company: 'Company name', phone: 'Contact number', phonePh: 'e.g. 012-345 6789', email: 'Email (optional)', industry: 'Industry', workers: 'Number of workers needed', service: 'Required service', message: 'Message',
+    messagePh: 'Anything else we should know?', choose: 'Please choose',
+    nationality: 'Preferred nationality', noPref: 'No preference', needs: 'Main help needed', location: 'Your area (e.g. Cheras, Petaling Jaya)', timing: 'When do you need a helper?', household: 'About your household (optional)', householdPh: 'e.g. 2 children aged 3 and 6, elderly parent at home',
+    consent: 'I agree that Final Choice may use these details to reply to my enquiry. See the', privacy: 'Privacy Policy',
+    submitWa: 'Continue on WhatsApp', submit: 'Send enquiry',
+    hintWa: 'This button opens WhatsApp with your details ready to send. Your enquiry is only received once you press Send in WhatsApp. Do not send ID or passport copies in the first message.',
+    hint: 'We will reply during office hours. Please do not include ID or passport numbers.',
+    errName: 'Please enter your name.', errCompany: 'Please enter your company name.', errPhone: 'Please enter a valid Malaysian phone number.', errEmail: 'Please enter a valid email address or leave it empty.', errConsent: 'Please tick the box to continue.',
+    opened: 'WhatsApp should now be open with your message. Press Send there to submit. If nothing opened, WhatsApp us on the number shown on this page.',
+    sending: 'Sending…', received: 'Thank you. Your enquiry has been received and our consultant will reply during office hours.', failed: 'Sorry, we could not send your enquiry. Please use WhatsApp or call us instead.',
+    duplicate: 'This enquiry was already sent a moment ago. Please wait before sending again.',
+    industries: ['Manufacturing', 'Construction', 'Services', 'Plantation', 'Agriculture', 'Other'],
+    fwServices: ['Foreign worker recruitment', 'Quota / application assistance', 'Section 60K application', 'FWCMS / FWe Approval documents', 'Permit renewal', 'Document preparation and checking', 'Change of employer', 'Not sure yet'],
+    maidNeeds: ['Childcare', 'Elderly care', 'Housekeeping and cooking', 'General helper', 'Permit or contract renewal', 'Not sure yet'],
+    timings: ['As soon as possible', 'Within 1–3 months', 'Later / just exploring'],
+    honeypot: 'Leave this field empty',
+    msgFw: 'Hello Final Choice, I would like to enquire about foreign workers.', msgMaid: 'Hello Final Choice, I would like to enquire about a domestic helper.',
+    lName: 'Name', lCompany: 'Company', lPhone: 'Contact', lEmail: 'Email', lIndustry: 'Industry', lWorkers: 'Workers needed', lService: 'Service', lMessage: 'Message', lNat: 'Nationality', lNeed: 'Help needed', lLocation: 'Area', lTiming: 'Timing', lHousehold: 'Household',
+  },
+  sections: { related: 'Related pages', faq: 'Frequently asked questions', sources: 'Official sources', licence: 'Licensed agency', verified: 'Verified company information', office: 'Our office', hours: 'Opening hours', enquire: 'Make an enquiry', directions: 'Get directions', note: 'Please note' },
+};
+
+const bm: typeof en = {
+  nav: { skip: 'Langkau ke kandungan utama', main: 'Menu utama', menu: 'Menu', language: 'Bahasa', switchTo: 'Tukar bahasa', home: 'Utama', fw: 'Pekerja Asing', maid: 'Pembantu Rumah', about: 'Tentang Kami', faq: 'Soalan Lazim', contact: 'Hubungi' },
+  crumb: { home: 'Utama', label: 'Laluan halaman' },
+  strip: { licensed: 'Agensi berlesen', fw: 'Pekerja asing', maid: 'Pembantu rumah' },
+  btn: {
+    hireFw: 'Ambil Pekerja Asing', findMaid: 'Cari Pembantu Rumah', whatsapp: 'WhatsApp', whatsappUs: 'WhatsApp Kami', call: 'Hubungi',
+    checkReq: 'Semak Keperluan Syarikat Anda', enquireFw: 'Tanya Tentang Pekerja Asing', speakConsultant: 'Bercakap dengan Perunding Kami',
+    viewBiodata: 'Lihat Biodata Pembantu Rumah', requestBiodata: 'Minta Biodata Yang Ada', whatsappConsultant: 'WhatsApp Perunding Kami',
+    learnMore: 'Ketahui lanjut', read: 'Baca lanjut',
+  },
+  hours: { weekdays: 'Isnin–Jumaat', saturday: 'Sabtu', closed: 'Ahad & cuti umum: tutup' },
+  wa: {
+    fwHome: 'Helo Final Choice, saya ingin bertanya tentang pekerja asing untuk syarikat saya.',
+    maidHome: 'Helo Final Choice, saya ingin bertanya tentang mengambil pembantu rumah.',
+    general: 'Helo Final Choice, saya ingin bertanya tentang perkhidmatan anda.',
+    float: 'Berbual dengan Final Choice di WhatsApp', floatLabel: 'WhatsApp',
+  },
+  cta: { fwTitle: 'Ceritakan tentang syarikat anda dan pekerja yang diperlukan', fwText: 'Hantar sektor, jawatan dan bilangan pekerja. Perunding kami akan menerangkan keperluan yang mungkin terpakai sebelum anda membuat sebarang komitmen.', maidTitle: 'Ceritakan tentang isi rumah anda', maidText: 'Kongsi siapa yang perlu dijaga, tugas utama dan kewarganegaraan pilihan. Kami akan berkongsi biodata yang sesuai dan menerangkan langkah-langkahnya.', generalTitle: 'Tidak pasti dari mana hendak mula?', generalText: 'Pilih saluran yang sesuai dengan keperluan anda, atau tanya kami. Anda tidak perlu meneruskan selepas perbualan pertama.' },
+  footer: {
+    companyNo: 'No. Syarikat', licence: 'Lesen agensi', fw: 'Pekerja Asing', maid: 'Pembantu Rumah', company: 'Syarikat', contact: 'Hubungi',
+    rights: 'Hak cipta terpelihara.',
+    disclaimer: 'Final Choice membantu pengambilan, dokumentasi dan penyediaan permohonan. Keputusan kelulusan dibuat oleh pihak berkuasa Malaysia yang berkaitan; tempoh pemprosesan tidak boleh dijamin.',
+    wa: 'WhatsApp', tagline: 'Agensi pekerjaan berlesen, Kuala Lumpur.',
+  },
+  form: {
+    fwTitle: 'Pertanyaan pekerja asing', maidTitle: 'Pertanyaan pembantu rumah',
+    name: 'Nama anda', company: 'Nama syarikat', phone: 'Nombor telefon', phonePh: 'cth. 012-345 6789', email: 'E-mel (pilihan)', industry: 'Industri', workers: 'Bilangan pekerja diperlukan', service: 'Perkhidmatan diperlukan', message: 'Mesej',
+    messagePh: 'Ada perkara lain yang perlu kami tahu?', choose: 'Sila pilih',
+    nationality: 'Kewarganegaraan pilihan', noPref: 'Tiada pilihan', needs: 'Bantuan utama diperlukan', location: 'Kawasan anda (cth. Cheras, Petaling Jaya)', timing: 'Bila anda memerlukan pembantu?', household: 'Tentang isi rumah anda (pilihan)', householdPh: 'cth. 2 anak berumur 3 dan 6 tahun, ibu bapa warga emas di rumah',
+    consent: 'Saya bersetuju Final Choice boleh menggunakan butiran ini untuk membalas pertanyaan saya. Lihat', privacy: 'Dasar Privasi',
+    submitWa: 'Teruskan di WhatsApp', submit: 'Hantar pertanyaan',
+    hintWa: 'Butang ini membuka WhatsApp dengan butiran anda sedia untuk dihantar. Pertanyaan anda hanya diterima apabila anda menekan Hantar di WhatsApp. Jangan hantar salinan kad pengenalan atau pasport dalam mesej pertama.',
+    hint: 'Kami akan membalas dalam waktu pejabat. Sila jangan sertakan nombor kad pengenalan atau pasport.',
+    errName: 'Sila masukkan nama anda.', errCompany: 'Sila masukkan nama syarikat anda.', errPhone: 'Sila masukkan nombor telefon Malaysia yang sah.', errEmail: 'Sila masukkan alamat e-mel yang sah atau biarkan kosong.', errConsent: 'Sila tandakan kotak untuk meneruskan.',
+    opened: 'WhatsApp sepatutnya kini terbuka dengan mesej anda. Tekan Hantar di sana untuk menghantar. Jika tiada yang terbuka, WhatsApp kami pada nombor yang tertera di halaman ini.',
+    sending: 'Menghantar…', received: 'Terima kasih. Pertanyaan anda telah diterima dan perunding kami akan membalas dalam waktu pejabat.', failed: 'Maaf, kami tidak dapat menghantar pertanyaan anda. Sila gunakan WhatsApp atau hubungi kami.',
+    duplicate: 'Pertanyaan ini baru sahaja dihantar. Sila tunggu sebentar sebelum menghantar semula.',
+    industries: ['Pembuatan', 'Pembinaan', 'Perkhidmatan', 'Perladangan', 'Pertanian', 'Lain-lain'],
+    fwServices: ['Pengambilan pekerja asing', 'Bantuan kuota / permohonan', 'Permohonan Seksyen 60K', 'Dokumen FWCMS / Kelulusan FWe', 'Pembaharuan permit', 'Penyediaan dan semakan dokumen', 'Tukar majikan', 'Belum pasti'],
+    maidNeeds: ['Jaga anak', 'Jaga warga emas', 'Kerja rumah dan memasak', 'Pembantu am', 'Pembaharuan permit atau kontrak', 'Belum pasti'],
+    timings: ['Secepat mungkin', 'Dalam 1–3 bulan', 'Kemudian / sekadar meninjau'],
+    honeypot: 'Biarkan ruang ini kosong',
+    msgFw: 'Helo Final Choice, saya ingin bertanya tentang pekerja asing.', msgMaid: 'Helo Final Choice, saya ingin bertanya tentang pembantu rumah.',
+    lName: 'Nama', lCompany: 'Syarikat', lPhone: 'Telefon', lEmail: 'E-mel', lIndustry: 'Industri', lWorkers: 'Pekerja diperlukan', lService: 'Perkhidmatan', lMessage: 'Mesej', lNat: 'Kewarganegaraan', lNeed: 'Bantuan diperlukan', lLocation: 'Kawasan', lTiming: 'Masa', lHousehold: 'Isi rumah',
+  },
+  sections: { related: 'Halaman berkaitan', faq: 'Soalan lazim', sources: 'Sumber rasmi', licence: 'Agensi berlesen', verified: 'Maklumat syarikat yang disahkan', office: 'Pejabat kami', hours: 'Waktu operasi', enquire: 'Buat pertanyaan', directions: 'Dapatkan arah', note: 'Sila ambil perhatian' },
+};
+
+export const UI = { en, bm };
+export const t = (lang: Lang) => UI[lang];

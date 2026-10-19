@@ -1,0 +1,214 @@
+---
+// One template for every content page (landing pages, supporting pages, about, contact, FAQ, privacy).
+// Content comes from src/content/*.ts, so English and Malay pages always share the same structure.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { getPage, faqGroups } from '../content';
+import { site } from '../data/site';
+import { href, asset, whatsappLink, telLink } from '../lib/urls';
+import { serviceSchema } from '../lib/schema';
+import { PAGES, path, pathOrHome, hasLang, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { shortLabel } from '../i18n/labels';
+
+interface Props { lang: Lang; pageKey: PageKey }
+const { lang, pageKey } = Astro.props;
+const T = t(lang);
+const P = getPage(pageKey, lang);
+const group = PAGES[pageKey].group;
+const track = group === 'main' ? 'main' : group;
+const line = track === 'maid' ? 'maid' : 'fw';
+const pagePath = path(lang, pageKey);
+const isHub = pageKey === 'fw' || pageKey === 'maid';
+
+// Breadcrumbs: Home › (hub) › this page
+const hubKey: PageKey | null = group === 'fw' ? 'fw' : group === 'maid' ? 'maid' : null;
+const crumbs = [
+  ...(hubKey && pageKey !== hubKey && hasLang(hubKey, lang) ? [{ name: shortLabel(hubKey, lang), path: path(lang, hubKey) }] : []),
+  { name: shortLabel(pageKey, lang), path: pagePath },
+];
+
+const schema = group === 'main' ? [] : [serviceSchema({ name: P.h1, description: P.description, path: pagePath, lang })];
+const related = (P.related ?? []).filter((k) => hasLang(k, lang));
+const relLabel = (k: PageKey) => getPage(k, lang).h1;
+const isContact = pageKey === 'contact';
+const isFaq = pageKey === 'faq';
+const isBiodata = pageKey === 'maidBiodata';
+const isPrivacyDraft = pageKey === 'privacy' && !site.seo.privacyPolicyApproved;
+const enquiryHeading = T.sections.enquire;
+const heroPrimary = line === 'maid' ? (isBiodata ? T.btn.requestBiodata : T.btn.whatsappConsultant) : T.btn.speakConsultant;
+let n = 0; // alternates section backgrounds for rhythm
+---
+<BaseLayout lang={lang} pageKey={pageKey} title={P.title} description={P.description} crumbs={crumbs} schema={schema} waMessage={P.wa}>
+  <section class={`page-hero${P.image ? ' page-hero--media' : ''}`}>
+    <div class="container page-hero__grid">
+      <div>
+        <p class="eyebrow">{P.eyebrow}</p>
+        <h1>{P.h1}</h1>
+        <p class="lead">{P.lead}</p>
+        {isPrivacyDraft && <p class="callout callout--warn"><Icon name="clock" size={18} /> <span>{lang === 'bm' ? 'Draf menunggu kelulusan pengurusan.' : 'Draft pending management approval.'}</span></p>}
+        {!isContact && !isFaq && group !== 'main' && (
+          <div class="btn-row">
+            <a class="btn btn--wa btn--lg" href={whatsappLink(line, P.wa)} target="_blank" rel="noopener" data-track={`hero_wa_${pageKey}`}><Icon name="whatsapp" size={20} /> {heroPrimary}</a>
+            {P.form && <a class="btn btn--outline btn--lg" href="#enquire">{line === 'fw' ? T.btn.enquireFw : T.btn.findMaid}</a>}
+            {isBiodata && <a class="btn btn--outline btn--lg" href={site.externalBiodata} target="_blank" rel="noopener">{T.btn.viewBiodata} <Icon name="arrow" size={16} /></a>}
+          </div>
+        )}
+        {isHub && (
+          <ul class="hero__trust">
+            <li><Icon name="shield" size={18} /> {site.company.licence}</li>
+            <li><Icon name="check" size={18} /> {T.footer.companyNo} {site.company.registrationNo}</li>
+            <li><Icon name="phone" size={18} /> {site.contact[line].display}</li>
+          </ul>
+        )}
+      </div>
+      {P.image && (
+        <div class="page-hero__photo">
+          <img src={asset(P.image.src)} srcset={`${asset(P.image.src)} 800w, ${asset(P.image.src2)} ${P.image.w}w`} sizes="(min-width: 960px) 520px, 100vw" width={P.image.w} height={P.image.h} alt={P.image.alt} fetchpriority="high" />
+        </div>
+      )}
+    </div>
+  </section>
+
+  {P.blocks.map((b, i) => {
+    const alt = b.tint ?? (++n % 2 === 0);
+    return (
+      <section class={`section${alt ? ' section--tint' : ''}`} id={b.id} aria-labelledby={`h-${i}`}>
+        <div class="container">
+          <div class="section-head reveal"><h2 id={`h-${i}`}>{b.h2}</h2></div>
+          {b.paras && <div class="prose reveal">{b.paras.map((p) => <p>{p}</p>)}</div>}
+          {b.cards && (
+            <div class="grid grid--3 reveal">
+              {b.cards.map((c, ci) => {
+                const to = c.to && hasLang(c.to, lang) ? c.to : null;
+                return (
+                  <article class={`card need-card${to ? ' card--link' : ''}`} style={`--d:${ci * 60}ms`}>
+                    <span class="card__icon"><Icon name={c.icon} size={24} /></span>
+                    <div>
+                      <h3>{to ? <a href={href(path(lang, to))}>{c.t}</a> : c.t}</h3>
+                      <p>{c.d}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+          {b.bullets && (
+            <ul class="ticks ticks--2col reveal">
+              {b.bullets.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}
+            </ul>
+          )}
+          {b.steps && (
+            <ol class="process reveal">
+              {b.steps.map((s, si) => (
+                <li class="process__step">
+                  <span class="process__num" aria-hidden="true">{si + 1}</span>
+                  <div class="process__body">
+                    <h3 class="process__title"><span class="sr-only">{lang === 'bm' ? 'Langkah' : 'Step'} {si + 1}: </span>{s.t}</h3>
+                    <p>{s.d}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+          {b.note && <p class="callout callout--warn reveal"><Icon name="clock" size={18} /> <span>{b.note}</span></p>}
+          {b.sources && (
+            <ul class="related-links">
+              {b.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener noreferrer">{s.label} <Icon name="arrow" size={16} /></a></li>)}
+            </ul>
+          )}
+        </div>
+      </section>
+    );
+  })}
+
+  {isContact && (
+    <section class="section" aria-labelledby="contact-h">
+      <div class="container contact-grid">
+        <div class="info-panel">
+          <h2 id="contact-h">{T.sections.verified}</h2>
+          <ul class="contact-list">
+            <li><Icon name="whatsapp" size={18} /><span><strong>{T.strip.fw}</strong><br /><a href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener">WhatsApp {site.contact.fw.display}</a> · <a href={telLink('fw')}>{T.btn.call}</a></span></li>
+            <li><Icon name="whatsapp" size={18} /><span><strong>{T.strip.maid}</strong><br /><a href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener">WhatsApp {site.contact.maid.display}</a> · <a href={telLink('maid')}>{T.btn.call}</a></span></li>
+            <li><Icon name="mail" size={18} /><a href={`mailto:${site.company.email}`}>{site.company.email}</a></li>
+            <li><Icon name="pin" size={18} /><span>{site.company.address.street},<br />{site.company.address.postcode} {site.company.address.city}, Malaysia<br /><a href={site.company.mapsUrl} target="_blank" rel="noopener">{T.sections.directions}</a></span></li>
+            <li><Icon name="clock" size={18} /><span>{site.company.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ')}<br />{T.hours.closed}</span></li>
+          </ul>
+          <div class="licence-box">
+            <strong>{site.company.legalName}</strong>
+            <span>{T.footer.companyNo} {site.company.registrationNo}</span>
+            <span>{T.footer.licence}: {site.company.licence}</span>
+          </div>
+        </div>
+        <div class="forms-stack" id="enquire">
+          <EnquiryForm lang={lang} track="fw" />
+          <EnquiryForm lang={lang} track="maid" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {isFaq && faqGroups(lang).map((g, gi) => (
+    <section class={`section${gi % 2 ? ' section--tint' : ''}`} aria-labelledby={`faq-${gi}`}>
+      <div class="container">
+        <div class="section-head"><h2 id={`faq-${gi}`}>{g.title}</h2></div>
+        <div class="faq">
+          {g.items.map((f) => (
+            <details class="faq__item"><summary><h3 class="faq__q">{f.q}</h3></summary><div class="faq__a"><p>{f.a}</p></div></details>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  {P.faq && !isFaq && (
+    <section class="section section--tint" aria-labelledby="faq-h">
+      <div class="container">
+        <div class="section-head"><h2 id="faq-h">{T.sections.faq}</h2></div>
+        <div class="faq">
+          {P.faq.map((f) => (
+            <details class="faq__item"><summary><h3 class="faq__q">{f.q}</h3></summary><div class="faq__a"><p>{f.a}</p></div></details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {P.form && !isContact && group !== 'main' && (
+    <section class="section" id="enquire" aria-labelledby="enq-h">
+      <div class="container contact-grid">
+        <div>
+          <p class="eyebrow">{T.sections.licence}</p>
+          <h2 id="enq-h">{enquiryHeading}</h2>
+          <p class="muted">{line === 'fw' ? T.cta.fwText : T.cta.maidText}</p>
+          <ul class="contact-list">
+            <li><Icon name="whatsapp" size={18} /><a href={whatsappLink(line, P.wa)} target="_blank" rel="noopener">WhatsApp {site.contact[line].display}</a></li>
+            <li><Icon name="phone" size={18} /><a href={telLink(line)}>{site.contact[line].display}</a></li>
+            <li><Icon name="clock" size={18} /><span>{site.company.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ')}</span></li>
+          </ul>
+          <div class="licence-box">
+            <strong>{site.company.legalName}</strong>
+            <span>{T.footer.companyNo} {site.company.registrationNo}</span>
+            <span>{T.footer.licence}: {site.company.licence}</span>
+          </div>
+        </div>
+        <EnquiryForm lang={lang} track={line} />
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section section--tight" aria-labelledby="rel-h">
+      <div class="container">
+        <div class="section-head"><h2 id="rel-h">{T.sections.related}</h2></div>
+        <ul class="related-links">
+          {related.map((k) => <li><a href={href(path(lang, k))}>{relLabel(k)} <Icon name="arrow" size={16} /></a></li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {group !== 'main' || isFaq ? <CtaBand lang={lang} track={track === 'main' ? 'main' : track} message={P.wa} /> : <CtaBand lang={lang} track="main" />}
+</BaseLayout>

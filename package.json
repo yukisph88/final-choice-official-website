@@ -1,0 +1,18 @@
+{
+  "name": "final-choice-official-website",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Official website of Agensi Pekerjaan Final Choice Sdn Bhd: foreign worker recruitment and domestic helper (maid) agency services in Malaysia.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:site": "node scripts/check-site.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/montserrat": "^5.3.0",
+    "astro": "^7.3.8"
+  }
+}

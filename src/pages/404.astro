@@ -1,0 +1,28 @@
+---
+import { site } from '../data/site';
+import { href, asset } from '../lib/urls';
+---
+<!doctype html>
+<html lang="en-MY">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found | Final Choice</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href={asset('favicon/favicon-48.png')} sizes="48x48" type="image/png" />
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: system-ui, sans-serif; background: #fff; color: #0a1a5c; text-align: center; }
+      main { padding: 24px; max-width: 520px; }
+      img { width: 200px; height: auto; margin: 0 auto 8px; }
+      a { display: inline-block; margin: 6px; padding: 12px 22px; border-radius: 999px; background: #0162c7; color: #fff; text-decoration: none; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src={asset('images/logo-final-choice.png')} alt={site.company.legalName} width="720" height="537" />
+      <h1>Page not found / Halaman tidak dijumpai</h1>
+      <p>The page you are looking for does not exist or has moved.</p>
+      <p><a href={href('/en/')}>English home</a><a href={href('/bm/')}>Laman utama BM</a></p>
+    </main>
+  </body>
+</html>
