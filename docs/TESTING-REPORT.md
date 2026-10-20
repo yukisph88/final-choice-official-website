@@ -25,3 +25,13 @@ Environment: production build (`npm run build`) served by `astro preview` at `ht
 - **Real browsers other than the in-app one** (Safari, Firefox) and screen readers: not tested. Keyboard focus styles and skip link exist; a manual accessibility pass is still recommended.
 - **Deployment, live URL, GitHub Actions run:** not done (awaiting your approval to create the repository).
 - **Facts and regulatory wording:** not verified by operations staff (see ASSETS-AND-CONFIRMATIONS.md).
+
+## Live deployment (20 Oct 2026)
+
+URL: https://yukisph88.github.io/final-choice-official-website/en/ . GitHub Actions run green (build + test:site + deploy). `noindex` and `Disallow: /` confirmed live.
+
+- Live crawl of all 38 sitemap and privacy URLs: every internal link returns 200; every image loads; no horizontal overflow at 375 and 1440 px; all WhatsApp links match `wa.me/60133773333` or `wa.me/60183773333`; the language switcher target exists on every page; the menu button is present on every page; no console errors.
+- Maid form on the live site builds the correct WhatsApp hand-off and says WhatsApp was opened, not "received".
+- Lighthouse 12 (headless Chrome, live URL, mobile unless noted): Performance 95-98 (home mobile 95, LCP 2.3 s; home desktop 97, LCP 0.8 s), Accessibility 100, Best Practices 100, SEO 66. CLS 0 everywhere. The only failing SEO audit is "page is blocked from indexing", which is the intentional `noindex`; it should reach about 100 once indexing is enabled. Lab results, not field Core Web Vitals.
+- Fixed after first audit: generic "Learn more" link text; oversized hero images on mobile (added 480 px variants). Home mobile performance 84 -> 95.
+- Still not tested: Safari/Firefox, screen readers, real-phone WhatsApp.
