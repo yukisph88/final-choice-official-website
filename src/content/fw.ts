@@ -38,7 +38,7 @@ export const fwPages: PageSet = {
       title: 'Foreign Worker Recruitment Malaysia | Final Choice',
       description: 'Licensed agency (JTKSM 483) helping Malaysian employers with foreign worker recruitment, quota applications, Section 60K, FWCMS / FWe Approval and documents.',
       h1: 'Foreign Worker Recruitment and Application Services in Malaysia',
-      eyebrow: 'For employers and HR teams',
+      eyebrow: 'For Employers',
       lead: 'Final Choice helps Malaysian employers recruit foreign workers and manage the application process: eligibility and document checks, quota applications, Section 60K, FWCMS / FWe Approval and follow-up, so your team knows what is needed at each stage.',
       image: img,
       wa: 'Hello Final Choice, I would like to check the requirements for foreign workers for my company.',

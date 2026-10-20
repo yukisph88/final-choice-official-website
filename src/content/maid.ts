@@ -35,10 +35,10 @@ export const maidPages: PageSet = {
   // ---------------------------------------------------------------------------------------------
   maid: {
     en: {
-      title: 'Maid Agency Malaysia | Indonesian & Filipino Maids | Final Choice',
-      description: 'Licensed maid agency (JTKSM 483) in Kuala Lumpur helping Malaysian households hire Indonesian and Filipino domestic helpers: biodata, interviews, documents and renewals.',
-      h1: 'Maid Agency in Malaysia: Indonesian and Filipino Domestic Helpers',
-      eyebrow: 'For families and households',
+      title: 'Domestic Helper Services & Maid Agency Malaysia | Final Choice',
+      description: 'Licensed agency (JTKSM 483) in Kuala Lumpur helping Malaysian families hire Indonesian and Filipino domestic helpers: biodata, interviews, documents and renewals.',
+      h1: 'Domestic Helper Services in Malaysia: Indonesian and Filipino Maids',
+      eyebrow: 'For Families & Households',
       lead: 'Final Choice helps Malaysian families find a suitable Indonesian or Filipino domestic helper and guides you through every step: biodata, interview, documents, arrival and after-placement support.',
       image: hero,
       wa: 'Hello Final Choice, I would like to enquire about hiring a domestic helper.',
@@ -69,9 +69,9 @@ export const maidPages: PageSet = {
       form: true,
     },
     bm: {
-      title: 'Agensi Pembantu Rumah Malaysia | Indonesia & Filipina',
-      description: 'Agensi pembantu rumah berlesen (JTKSM 483) di Kuala Lumpur: pembantu rumah Indonesia dan Filipina, biodata, temu duga, dokumen dan pembaharuan.',
-      h1: 'Agensi Pembantu Rumah di Malaysia: Pembantu Rumah Indonesia dan Filipina',
+      title: 'Perkhidmatan Pembantu Rumah Malaysia | Indonesia & Filipina',
+      description: 'Agensi berlesen (JTKSM 483) di Kuala Lumpur: pembantu rumah Indonesia dan Filipina, biodata, temu duga, dokumen dan pembaharuan.',
+      h1: 'Perkhidmatan Pembantu Rumah di Malaysia: Indonesia dan Filipina',
       eyebrow: 'Untuk keluarga dan isi rumah',
       lead: 'Final Choice membantu keluarga Malaysia mencari pembantu rumah Indonesia atau Filipina yang sesuai dan membimbing anda pada setiap langkah: biodata, temu duga, dokumen, ketibaan dan sokongan selepas penempatan.',
       image: hero,
@@ -197,7 +197,7 @@ export const maidPages: PageSet = {
       lead: 'A biodata sheet summarises a helper’s background, languages, experience and skills. Tell us what your household needs and we will share suitable biodata.',
       wa: 'Hello Final Choice, I would like to request available maid biodata. My household needs: ',
       blocks: [
-        { h2: 'See existing biodata', paras: ['Our maid biodata directory is maintained on our existing maid agency website: use the View Maid Biodata button above to browse the profiles currently published there. Or tell us what you need and we will send a short list that fits.'], },
+        { h2: 'See existing biodata', paras: ['Our maid biodata directory is maintained on our existing maid website: use the View Maid Biodata button above to browse the profiles currently published there. Or tell us what you need and we will send a short list that fits.'], },
         { h2: 'What a biodata sheet usually shows', bullets: ['Age, nationality and marital status', 'Languages spoken', 'Work experience and the countries worked in', 'Declared skills such as childcare, elderly care, cooking and housekeeping', 'Our interview assessment notes'], note: 'Biodata lists declared skills. Confirm what matters most at the interview.' },
         { h2: 'How to request', steps: [
           { t: 'Tell us your needs', d: 'Who needs care, the main duties, nationality preference and any religious or dietary needs.' },

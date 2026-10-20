@@ -2,9 +2,9 @@
 import type { Lang } from './routes';
 
 const en = {
-  nav: { skip: 'Skip to main content', main: 'Main menu', menu: 'Menu', language: 'Language', switchTo: 'Switch language', home: 'Home', fw: 'Foreign Workers', maid: 'Maid Agency', about: 'About', faq: 'FAQ', contact: 'Contact' },
+  nav: { skip: 'Skip to main content', main: 'Main menu', menu: 'Menu', language: 'Language', switchTo: 'Switch language', home: 'Home', fw: 'Foreign Workers', maid: 'Domestic Helpers', about: 'About', faq: 'FAQ', contact: 'Contact' },
   crumb: { home: 'Home', label: 'Breadcrumb' },
-  strip: { licensed: 'Licensed agency', fw: 'Foreign workers', maid: 'Maid enquiries' },
+  strip: { licensed: 'Licensed agency', fw: 'Foreign workers', maid: 'Domestic helpers' },
   btn: {
     hireFw: 'Hire Foreign Workers', findMaid: 'Find a Domestic Helper', whatsapp: 'WhatsApp', whatsappUs: 'WhatsApp Us', call: 'Call',
     checkReq: 'Check Your Company Requirements', enquireFw: 'Enquire About Foreign Workers', speakConsultant: 'Speak to Our Consultant',

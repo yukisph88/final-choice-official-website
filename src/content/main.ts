@@ -46,7 +46,7 @@ export const mainPages: PageSet = {
   contact: {
     en: {
       title: 'Contact Final Choice | Kuala Lumpur Employment Agency',
-      description: 'Contact Final Choice in Taman Mutiara Barat, Kuala Lumpur: WhatsApp, phone, email, office address and opening hours for foreign worker and maid enquiries.',
+      description: 'Contact Final Choice in Taman Mutiara Barat, Kuala Lumpur: WhatsApp, phone, email, office address and opening hours for foreign worker and domestic helper enquiries.',
       h1: 'Contact Final Choice',
       eyebrow: 'Get in touch',
       lead: 'Choose the line that fits your enquiry. Our consultant will reply during office hours.',
@@ -70,7 +70,7 @@ export const mainPages: PageSet = {
 
   faq: {
     en: {
-      title: 'FAQ | Foreign Workers and Maid Agency Malaysia | Final Choice',
+      title: 'FAQ | Foreign Workers and Domestic Helpers Malaysia | Final Choice',
       description: 'Answers to common questions about foreign worker applications, Section 60K, FWCMS, quotas and hiring Indonesian or Filipino domestic helpers in Malaysia.',
       h1: 'Frequently Asked Questions',
       eyebrow: 'FAQ',
