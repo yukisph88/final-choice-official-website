@@ -489,3 +489,6 @@ html:lang(ms-MY) .nav-item .nav-link { padding-right: 6px; }
 .main-nav .subnav a.subnav__all::after { content: none; display: none; }
 .main-nav .subnav a.subnav__all:hover { background: none; color: var(--navy); }
 @media (max-width: 1240px) { .main-nav .subnav a.subnav__all { margin-top: 8px; padding: 16px 10px 8px; font-size: .84rem; } }
+
+/* touch-target size: the submenu toggle is at least 28 x 38 px */
+@media (min-width: 1241px) { .sub-toggle { width: 28px; margin-left: -12px; } .nav-item .nav-link { padding-right: 12px; } }
