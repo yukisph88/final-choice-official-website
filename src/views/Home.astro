@@ -148,11 +148,11 @@ const hasBm = (k: string) => lang === 'en' || ['fw', 'maid'].includes(k);
       </div>
       <div class="hero__duo">
         <figure class="hero__duo-a">
-          <img src={asset('images/hero-foreign-workers-800.webp')} srcset={`${asset('images/hero-foreign-workers-800.webp')} 800w, ${asset('images/hero-foreign-workers-1200.webp')} 1200w`} sizes="(min-width: 900px) 300px, 45vw" width="1200" height="900" alt={C.heroAltFw} fetchpriority="high" />
+          <img src={asset('images/hero-foreign-workers-480.webp')} srcset={`${asset('images/hero-foreign-workers-480.webp')} 480w, ${asset('images/hero-foreign-workers-800.webp')} 800w`} sizes="(min-width: 900px) 300px, 45vw" width="1200" height="900" alt={C.heroAltFw} fetchpriority="high" />
           <figcaption>{C.photoFw}</figcaption>
         </figure>
         <figure class="hero__duo-b">
-          <img src={asset('images/home-helper-housekeeping-640.webp')} srcset={`${asset('images/home-helper-housekeeping-640.webp')} 640w, ${asset('images/home-helper-housekeeping-1024.webp')} 1024w`} sizes="(min-width: 900px) 300px, 45vw" width="1024" height="683" alt={C.heroAltMaid} fetchpriority="high" />
+          <img src={asset('images/home-helper-housekeeping-480.webp')} srcset={`${asset('images/home-helper-housekeeping-480.webp')} 480w, ${asset('images/home-helper-housekeeping-640.webp')} 640w`} sizes="(min-width: 900px) 300px, 45vw" width="1024" height="683" alt={C.heroAltMaid} />
           <figcaption>{C.photoMaid}</figcaption>
         </figure>
         <div class="hero__badge">
@@ -238,12 +238,12 @@ const hasBm = (k: string) => lang === 'en' || ['fw', 'maid'].includes(k);
         <div class="card reveal">
           <h3><Icon name="building" size={22} /> {C.svcFw}</h3>
           <ul class="ticks">{C.svcFwList.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-          <a class="btn btn--primary btn--sm" href={p('fw')}>{T.btn.learnMore} <Icon name="arrow" size={16} /></a>
+          <a class="btn btn--primary btn--sm" href={p('fw')}>{C.fw.more} <Icon name="arrow" size={16} /></a>
         </div>
         <div class="card reveal" style="--d:100ms">
           <h3><Icon name="home" size={22} /> {C.svcMaid}</h3>
           <ul class="ticks">{C.svcMaidList.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-          <a class="btn btn--accent btn--sm" href={p('maid')}>{T.btn.learnMore} <Icon name="arrow" size={16} /></a>
+          <a class="btn btn--accent btn--sm" href={p('maid')}>{C.maid.more} <Icon name="arrow" size={16} /></a>
         </div>
       </div>
     </div>
