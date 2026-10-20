@@ -2,9 +2,9 @@
 import type { Lang } from './routes';
 
 const en = {
-  nav: { skip: 'Skip to main content', main: 'Main menu', menu: 'Menu', language: 'Language', switchTo: 'Switch language', home: 'Home', fw: 'Foreign Workers', maid: 'Domestic Helpers', about: 'About', faq: 'FAQ', contact: 'Contact' },
+  nav: { skip: 'Skip to main content', main: 'Main menu', menu: 'Menu', language: 'Language', switchTo: 'Switch language', home: 'Home', fw: 'Foreign Workers', maid: 'Maid Services', about: 'About', faq: 'FAQ', contact: 'Contact' },
   crumb: { home: 'Home', label: 'Breadcrumb' },
-  strip: { licensed: 'Licensed agency', fw: 'Foreign workers', maid: 'Domestic helpers' },
+  strip: { licensed: 'Licensed agency', fw: 'Foreign workers', maid: 'Maid services' },
   btn: {
     hireFw: 'Hire Foreign Workers', findMaid: 'Find a Domestic Helper', whatsapp: 'WhatsApp', whatsappUs: 'WhatsApp Us', call: 'Call',
     checkReq: 'Check Your Company Requirements', enquireFw: 'Enquire About Foreign Workers', speakConsultant: 'Speak to Our Consultant',
@@ -20,7 +20,7 @@ const en = {
   },
   cta: { fwTitle: 'Tell us about your company and the workers you need', fwText: 'Send your sector, job position and number of workers. Our consultant will explain which requirements may apply before you commit to anything.', maidTitle: 'Tell us about your household', maidText: 'Share who needs care, the main duties and your preferred nationality. We will share suitable biodata and explain the steps.', generalTitle: 'Not sure where to start?', generalText: 'Choose the line that fits your need, or ask us. There is no obligation to proceed after your first conversation.' },
   footer: {
-    companyNo: 'Company No.', licence: 'Agency licence', fw: 'Foreign Workers', maid: 'Domestic Helpers', company: 'Company', contact: 'Contact',
+    companyNo: 'Company No.', licence: 'Agency licence', fw: 'Foreign Workers', maid: 'Maid Services', company: 'Company', contact: 'Contact',
     rights: 'All rights reserved.',
     disclaimer: 'Final Choice assists with recruitment, documentation and application preparation. Approval decisions are made by the relevant Malaysian authorities; processing times cannot be guaranteed.',
     wa: 'WhatsApp', tagline: 'Licensed employment agency, Kuala Lumpur.',
@@ -50,9 +50,9 @@ const en = {
 };
 
 const bm: typeof en = {
-  nav: { skip: 'Langkau ke kandungan utama', main: 'Menu utama', menu: 'Menu', language: 'Bahasa', switchTo: 'Tukar bahasa', home: 'Utama', fw: 'Pekerja Asing', maid: 'Pembantu Rumah', about: 'Tentang Kami', faq: 'Soalan Lazim', contact: 'Hubungi' },
+  nav: { skip: 'Langkau ke kandungan utama', main: 'Menu utama', menu: 'Menu', language: 'Bahasa', switchTo: 'Tukar bahasa', home: 'Utama', fw: 'Pekerja Asing', maid: 'Perkhidmatan Pembantu Rumah', about: 'Tentang Kami', faq: 'Soalan Lazim', contact: 'Hubungi' },
   crumb: { home: 'Utama', label: 'Laluan halaman' },
-  strip: { licensed: 'Agensi berlesen', fw: 'Pekerja asing', maid: 'Pembantu rumah' },
+  strip: { licensed: 'Agensi berlesen', fw: 'Pekerja asing', maid: 'Perkhidmatan pembantu rumah' },
   btn: {
     hireFw: 'Ambil Pekerja Asing', findMaid: 'Cari Pembantu Rumah', whatsapp: 'WhatsApp', whatsappUs: 'WhatsApp Kami', call: 'Hubungi',
     checkReq: 'Semak Keperluan Syarikat Anda', enquireFw: 'Tanya Tentang Pekerja Asing', speakConsultant: 'Bercakap dengan Perunding Kami',

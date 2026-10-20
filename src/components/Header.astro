@@ -3,24 +3,24 @@ import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { href, asset, whatsappLink, telLink } from '../lib/urls';
 import { path, LANGS, LANG_LABEL, HTML_LANG, type Lang, type Alternates, type PageKey } from '../i18n/routes';
+import { resolveNav } from '../i18n/nav';
 import { t } from '../i18n/ui';
 interface Props { lang: Lang; currentPath: string; alternates: Alternates; track: 'fw' | 'maid' | 'main' }
 const { lang, currentPath, alternates, track } = Astro.props;
 const T = t(lang);
+const groups = resolveNav(lang, currentPath);
+const byId = Object.fromEntries(groups.map((g) => [g.id, g]));
 
-const NAV: { label: string; key: PageKey; exact?: boolean; groups?: string[] }[] = [
-  { label: T.nav.home, key: 'home', exact: true },
-  { label: T.nav.fw, key: 'fw', groups: ['fw'] },
-  { label: T.nav.maid, key: 'maid', groups: ['maid'] },
-  { label: T.nav.about, key: 'about' },
-  { label: T.nav.faq, key: 'faq' },
-  { label: T.nav.contact, key: 'contact' },
+type Item = { label: string; key: PageKey; url: string; active: boolean; sub?: 'fw' | 'maid' };
+const items: Item[] = [
+  { label: T.nav.home, key: 'home', url: path(lang, 'home'), active: currentPath === path(lang, 'home') },
+  { label: T.nav.fw, key: 'fw', url: path(lang, 'fw'), active: track === 'fw', sub: 'fw' },
+  { label: T.nav.maid, key: 'maid', url: path(lang, 'maid'), active: track === 'maid', sub: 'maid' },
+  { label: T.nav.about, key: 'about', url: path(lang, 'about'), active: currentPath === path(lang, 'about') },
+  { label: T.nav.faq, key: 'faq', url: path(lang, 'faq'), active: currentPath === path(lang, 'faq') },
+  { label: T.nav.contact, key: 'contact', url: path(lang, 'contact'), active: currentPath === path(lang, 'contact') },
 ];
-const items = NAV.map((n) => {
-  const p = path(lang, n.key);
-  const active = n.exact ? currentPath === p : n.groups ? n.groups.includes(track) : currentPath === p;
-  return { label: n.label, url: p, active };
-});
+const submenuLabel = lang === 'bm' ? 'Submenu' : 'submenu';
 // Equivalent page in the other language; if there is no translation, fall back to that language's homepage.
 const switchLinks = LANGS.map((l) => ({ l, url: l === lang ? currentPath : alternates[l] ?? path(l, 'home') }));
 const waLine = track === 'maid' ? 'maid' : 'fw';
@@ -47,7 +47,34 @@ const waMsg = track === 'maid' ? T.wa.maidHome : track === 'fw' ? T.wa.fwHome : 
 
     <nav class="main-nav" id="main-nav" aria-label={T.nav.main}>
       <ul>
-        {items.map((n) => <li><a href={href(n.url)} aria-current={n.active ? 'page' : undefined}>{n.label}</a></li>)}
+        {items.map((n) => {
+          const g = n.sub ? byId[n.sub] : null;
+          if (!g) return <li><a class="nav-link" href={href(n.url)} aria-current={n.active ? 'page' : undefined}>{n.label}</a></li>;
+          const sid = `sub-${g.id}`;
+          return (
+            <li class="nav-item" data-sub>
+              <div class="nav-row">
+                <a class="nav-link" href={href(n.url)} aria-current={n.active ? 'page' : undefined}>{n.label}</a>
+                <button class="sub-toggle" type="button" aria-expanded="false" aria-controls={sid} aria-haspopup="true"><span class="sr-only">{n.label}: {submenuLabel}</span></button>
+              </div>
+              <div class="subnav" id={sid}>
+                <div class="subnav__cols">
+                  {g.sections.map((s) => (
+                    <div class="subnav__col">
+                      <p class="subnav__title">{s.link ? <a href={href(s.link)}>{s.title}</a> : s.title}</p>
+                      {s.items.length > 0 && (
+                        <ul>
+                          {s.items.map((i) => <li><a class="sub-link" href={href(i.href)} aria-current={i.current ? 'page' : undefined}>{i.label}</a></li>)}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <a class="subnav__all" href={href(g.all.href)}>{g.all.label} <Icon name="arrow" size={16} /></a>
+              </div>
+            </li>
+          );
+        })}
       </ul>
       <a class="btn btn--wa main-nav__cta" href={whatsappLink(waLine, waMsg)} target="_blank" rel="noopener" data-track="whatsapp_header">
         <Icon name="whatsapp" size={18} /> {T.btn.whatsappUs}
@@ -82,15 +109,61 @@ const waMsg = track === 'maid' ? T.wa.maidHome : track === 'fw' ? T.wa.fwHome : 
 <script>
   const btn = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const header = document.querySelector<HTMLElement>('[data-header]');
+  const desktop = window.matchMedia('(min-width: 1241px)');
+  const subs = [...document.querySelectorAll<HTMLElement>('[data-sub]')];
+  const toggleOf = (li: HTMLElement) => li.querySelector<HTMLButtonElement>('.sub-toggle')!;
+  const panelOf = (li: HTMLElement) => li.querySelector<HTMLElement>('.subnav')!;
+  const setSub = (li: HTMLElement, open: boolean) => {
+    li.classList.toggle('is-open', open);
+    if (!open) li.classList.remove('is-pinned');
+    toggleOf(li).setAttribute('aria-expanded', String(open));
+    const panel = panelOf(li);
+    panel.style.left = '';
+    if (open && desktop.matches) {
+      // keep the panel inside the screen
+      const over = panel.getBoundingClientRect().right - (window.innerWidth - 16);
+      if (over > 0) panel.style.left = `${-over - 12}px`;
+    }
+  };
+  const closeSubs = (except?: HTMLElement) => subs.forEach((li) => { if (li !== except) setSub(li, false); });
+
+  subs.forEach((li) => {
+    const toggle = toggleOf(li);
+    let timer = 0;
+    toggle.addEventListener('click', () => {
+      const open = li.classList.contains('is-open');
+      if (desktop.matches) {
+        // Desktop: hover opens it; a click pins it open (so a click never "undoes" the hover), a second click closes.
+        if (open && !li.classList.contains('is-pinned')) { li.classList.add('is-pinned'); return; }
+        if (open) { setSub(li, false); return; }
+        closeSubs(li); setSub(li, true); li.classList.add('is-pinned'); return;
+      }
+      closeSubs(li); setSub(li, !open);
+    });
+    li.addEventListener('mouseenter', () => { if (!desktop.matches) return; window.clearTimeout(timer); closeSubs(li); setSub(li, true); });
+    li.addEventListener('mouseleave', () => { if (!desktop.matches || li.classList.contains('is-pinned')) return; timer = window.setTimeout(() => setSub(li, false), 180); });
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && li.classList.contains('is-open')) { setSub(li, false); toggle.focus(); e.stopPropagation(); }
+      else if (e.key === 'ArrowDown' && document.activeElement === toggle) { setSub(li, true); panelOf(li).querySelector<HTMLElement>('a')?.focus(); e.preventDefault(); }
+    });
+    li.addEventListener('focusout', (e) => {
+      const to = (e as FocusEvent).relatedTarget as Node | null;
+      if (desktop.matches && to && !li.contains(to)) setSub(li, false);
+    });
+  });
+  document.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('[data-sub]')) closeSubs(); });
+
   if (btn && header) {
     const set = (open: boolean) => {
       btn.setAttribute('aria-expanded', String(open));
       header.classList.toggle('is-open', open);
       document.body.classList.toggle('nav-open', open);
+      if (!open) closeSubs();
     };
     btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && header.classList.contains('is-open')) { set(false); btn.focus(); } });
     header.querySelectorAll('.main-nav a').forEach((a) => a.addEventListener('click', () => set(false)));
+    desktop.addEventListener('change', () => { set(false); closeSubs(); });
     // Subtle elevation once the page is scrolled
     const onScroll = () => header.classList.toggle('is-stuck', window.scrollY > 8);
     onScroll();

@@ -31,6 +31,6 @@ export function faqGroups(lang: Lang): { title: string; items: QA[] }[] {
     : { fw: (getPage('fwQuota', 'bm').faq ?? []).slice(0, 2).concat(getPage('fwcms', 'bm').faq?.slice(0, 2) ?? []), maid: [] as QA[] };
   return [
     { title: lang === 'en' ? 'Foreign worker recruitment and applications' : 'Pengambilan dan permohonan pekerja asing', items: [...fw, ...extra.fw] },
-    { title: lang === 'en' ? 'Domestic helpers (maids)' : 'Pembantu rumah', items: [...maid, ...extra.maid] },
+    { title: lang === 'en' ? 'Maid services (domestic helpers)' : 'Pembantu rumah', items: [...maid, ...extra.maid] },
   ];
 }

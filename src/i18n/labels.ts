@@ -14,7 +14,7 @@ export const SHORT: Record<PageKey, { en: string; bm: string }> = {
   fwServices: { en: 'Services sector', bm: 'Perkhidmatan' },
   fwPlantation: { en: 'Plantation', bm: 'Perladangan' },
   fwAgriculture: { en: 'Agriculture', bm: 'Pertanian' },
-  maid: { en: 'Domestic helper services', bm: 'Perkhidmatan pembantu rumah' },
+  maid: { en: 'Maid services', bm: 'Perkhidmatan pembantu rumah' },
   maidIndonesian: { en: 'Indonesian maid', bm: 'Pembantu Indonesia' },
   maidFilipino: { en: 'Filipino maid', bm: 'Pembantu Filipina' },
   maidBiodata: { en: 'Maid biodata', bm: 'Biodata pembantu' },

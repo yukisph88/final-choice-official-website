@@ -35,15 +35,15 @@ export const maidPages: PageSet = {
   // ---------------------------------------------------------------------------------------------
   maid: {
     en: {
-      title: 'Domestic Helper Services & Maid Agency Malaysia | Final Choice',
+      title: 'Maid Services & Maid Agency Malaysia | Final Choice',
       description: 'Licensed agency (JTKSM 483) in Kuala Lumpur helping Malaysian families hire Indonesian and Filipino domestic helpers: biodata, interviews, documents and renewals.',
-      h1: 'Domestic Helper Services in Malaysia: Indonesian and Filipino Maids',
+      h1: 'Maid Services in Malaysia: Hire Indonesian and Filipino Domestic Helpers',
       eyebrow: 'For Families & Households',
       lead: 'Final Choice helps Malaysian families find a suitable Indonesian or Filipino domestic helper and guides you through every step: biodata, interview, documents, arrival and after-placement support.',
       image: hero,
       wa: 'Hello Final Choice, I would like to enquire about hiring a domestic helper.',
       blocks: [
-        { h2: 'Domestic helper services', cards: [
+        { h2: 'Maid services', cards: [
           { icon: 'users', t: 'Indonesian maid placement', d: 'Indonesian domestic helpers matched to your household.', to: 'maidIndonesian' },
           { icon: 'globe', t: 'Filipino maid placement', d: 'Filipino domestic helpers matched to your household.', to: 'maidFilipino' },
           { icon: 'file', t: 'Maid biodata enquiry', d: 'Request biodata for helpers who suit your needs.', to: 'maidBiodata' },
@@ -282,7 +282,7 @@ export const maidPages: PageSet = {
       title: 'Maid Permit Renewal Malaysia | Final Choice',
       description: 'Maid permit and contract renewal in Malaysia: why to plan early, what is usually involved and how Final Choice helps employers renew a domestic helper’s permit.',
       h1: 'Maid Permit and Contract Renewal in Malaysia',
-      eyebrow: 'Domestic helper services',
+      eyebrow: 'Maid services',
       lead: 'A domestic helper’s work permit and employment contract eventually need renewing. Final Choice helps employers plan ahead and prepare the paperwork so there is no gap.',
       wa: 'Hello Final Choice, I would like help renewing my domestic helper’s permit.',
       blocks: [

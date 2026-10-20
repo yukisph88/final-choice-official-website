@@ -1,10 +1,12 @@
 ---
+// Compact corporate footer: four short columns plus the verified contact block.
+// The full service lists live on the two landing pages and in the header menus.
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { href, asset, whatsappLink } from '../lib/urls';
-import { path, pathOrHome, type Lang, type PageKey } from '../i18n/routes';
-import { t } from '../i18n/ui';
+import { path, hasLang, type Lang, type PageKey } from '../i18n/routes';
 import { shortLabel } from '../i18n/labels';
+import { t } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const T = t(lang);
@@ -12,13 +14,31 @@ const F = T.footer;
 const c = site.company;
 const year = new Date().getFullYear();
 const hours = c.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ');
-const L = (k: PageKey) => ({ url: href(pathOrHome(lang, k)), label: shortLabel(k, lang) });
-const fwKeys: PageKey[] = ['fw', 'fwQuota', 'fw60k', 'fwcms', 'fwRenewal', 'fwDocs', 'fwManufacturing', 'fwConstruction', 'fwServices', 'fwPlantation', 'fwAgriculture'];
-const maidKeys: PageKey[] = ['maid', 'maidIndonesian', 'maidFilipino', 'maidBiodata', 'maidChildcare', 'maidElderly', 'maidRenewal', 'maidProcess'];
-const coKeys: PageKey[] = ['about', 'faq', 'contact', 'privacy'];
-// In Malay, list only pages that exist in Malay, so the footer never sends a Malay reader to an English page.
-import { hasLang } from '../i18n/routes';
-const show = (keys: PageKey[]) => keys.filter((k) => hasLang(k, lang));
+
+type Link = { key: PageKey; en: string; bm: string };
+const cols: { title: string; links: Link[] }[] = [
+  { title: F.company, links: (['about', 'contact', 'faq', 'privacy'] as PageKey[]).map((k) => ({ key: k, en: shortLabel(k, 'en'), bm: shortLabel(k, 'bm') })) },
+  {
+    title: F.fw,
+    links: [
+      { key: 'fw', en: 'Recruitment', bm: 'Pengambilan' },
+      { key: 'fwQuota', en: 'Quota / Section 60K', bm: 'Kuota / Seksyen 60K' },
+      { key: 'fwcms', en: 'FWCMS / FWe Approval', bm: 'FWCMS / Kelulusan FWe' },
+      { key: 'fwRenewal', en: 'Permit Renewal', bm: 'Pembaharuan Permit' },
+      { key: 'fw', en: 'View All Services', bm: 'Lihat Semua Perkhidmatan' },
+    ],
+  },
+  {
+    title: F.maid,
+    links: [
+      { key: 'maidIndonesian', en: 'Indonesian Maid', bm: 'Pembantu Indonesia' },
+      { key: 'maidFilipino', en: 'Filipino Maid', bm: 'Pembantu Filipina' },
+      { key: 'maidBiodata', en: 'Maid Biodata', bm: 'Biodata Pembantu' },
+      { key: 'maidRenewal', en: 'Maid Permit Renewal', bm: 'Pembaharuan Permit' },
+      { key: 'maid', en: 'View All Services', bm: 'Lihat Semua Perkhidmatan' },
+    ],
+  },
+].map((col) => ({ ...col, links: col.links.filter((l) => hasLang(l.key, lang)) }));
 ---
 <footer class="site-footer">
   <div class="container site-footer__grid">
@@ -36,26 +56,22 @@ const show = (keys: PageKey[]) => keys.filter((k) => hasLang(k, lang));
       </p>
     </div>
 
-    <div>
-      <h2 class="site-footer__h">{F.fw}</h2>
-      <ul class="site-footer__links">{show(fwKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
-    </div>
-    <div>
-      <h2 class="site-footer__h">{F.maid}</h2>
-      <ul class="site-footer__links">{show(maidKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
-    </div>
-    <div>
-      <h2 class="site-footer__h">{F.company}</h2>
-      <ul class="site-footer__links">{show(coKeys).map((k) => { const l = L(k); return <li><a href={l.url}>{l.label}</a></li>; })}</ul>
-    </div>
+    {cols.map((col) => (
+      <div>
+        <h2 class="site-footer__h">{col.title}</h2>
+        <ul class="site-footer__links">
+          {col.links.map((l) => <li><a href={href(path(lang, l.key))}>{l[lang]}</a></li>)}
+        </ul>
+      </div>
+    ))}
 
     <div class="site-footer__contact">
       <h2 class="site-footer__h">{F.contact}</h2>
       <ul class="contact-list">
+        <li><Icon name="pin" size={18} /><a href={c.mapsUrl} target="_blank" rel="noopener">{c.address.street}, {c.address.postcode} {c.address.city}</a></li>
         <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener" data-track="whatsapp_footer_fw">{T.strip.fw}: {site.contact.fw.display}</a></li>
         <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener" data-track="whatsapp_footer_maid">{T.strip.maid}: {site.contact.maid.display}</a></li>
         <li><Icon name="mail" size={18} /><a href={`mailto:${c.email}`}>{c.email}</a></li>
-        <li><Icon name="pin" size={18} /><a href={c.mapsUrl} target="_blank" rel="noopener">{c.address.street}, {c.address.postcode} {c.address.city}</a></li>
         <li><Icon name="clock" size={18} /><span>{hours}</span></li>
       </ul>
     </div>

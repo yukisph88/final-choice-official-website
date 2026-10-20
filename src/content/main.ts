@@ -70,7 +70,7 @@ export const mainPages: PageSet = {
 
   faq: {
     en: {
-      title: 'FAQ | Foreign Workers and Domestic Helpers Malaysia | Final Choice',
+      title: 'FAQ | Foreign Workers and Maid Services Malaysia | Final Choice',
       description: 'Answers to common questions about foreign worker applications, Section 60K, FWCMS, quotas and hiring Indonesian or Filipino domestic helpers in Malaysia.',
       h1: 'Frequently Asked Questions',
       eyebrow: 'FAQ',
