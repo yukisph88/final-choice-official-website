@@ -66,7 +66,7 @@ let n = 0; // alternates section backgrounds for rhythm
       </div>
       {P.image && (
         <div class="page-hero__photo">
-          <img src={asset(P.image.src)} srcset={`${asset(P.image.src)} 800w, ${asset(P.image.src2)} ${P.image.w}w`} sizes="(min-width: 960px) 520px, 100vw" width={P.image.w} height={P.image.h} alt={P.image.alt} fetchpriority="high" />
+          <img src={asset(P.image.src)} srcset={`${asset(P.image.src)} ${Math.round(P.image.w / 2)}w, ${asset(P.image.src2)} ${P.image.w}w`} sizes="(min-width: 960px) 520px, 100vw" width={P.image.w} height={P.image.h} alt={P.image.alt} fetchpriority="high" />
         </div>
       )}
     </div>

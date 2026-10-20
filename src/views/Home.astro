@@ -2,61 +2,77 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { getPage } from '../content';
+import EnquiryForm from '../components/EnquiryForm.astro';
 import { site } from '../data/site';
 import { href, asset, whatsappLink, telLink } from '../lib/urls';
-import { path, type Lang } from '../i18n/routes';
+import { path, hasLang, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const T = t(lang);
-const p = (k: Parameters<typeof path>[1], hash = '') => href(path(lang, k, hash));
+const p = (k: PageKey, hash = '') => href(path(lang, k, hash));
+const hours = site.company.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ');
 
 const C = {
   en: {
     title: 'Foreign Worker Recruitment & Maid Agency Malaysia | Final Choice',
     description: 'Licensed agency (JTKSM 483) in Kuala Lumpur for foreign worker recruitment, quota, Section 60K and FWCMS applications, and Indonesian and Filipino domestic helpers.',
-    h1a: 'Your Trusted Partner for Foreign Worker Recruitment',
-    h1b: '& Domestic Helper Services in Malaysia',
+    h1a: 'Your Trusted Partner for Foreign Worker Recruitment', h1b: '& Domestic Helper Services in Malaysia',
     lead: 'One licensed agency in Kuala Lumpur for two needs: helping employers recruit foreign workers and manage the application process, and helping families find a suitable Indonesian or Filipino domestic helper.',
-    pathHead: 'Choose your path', pathLead: 'Different needs, different processes. Start with the one that fits you.',
-    fw: { tag: 'For businesses', h: 'Foreign Worker Recruitment', p: 'Eligibility checks, quota and application assistance, Section 60K, FWCMS / FWe Approval and document preparation for factories, contractors, plantations, farms and service businesses.', li: ['Quota and employer applications', 'Document checking and follow-up', 'Manufacturing, construction, services, plantation, agriculture'], more: 'Foreign worker services' },
-    maid: { tag: 'For households', h: 'Domestic Helper Agency', p: 'Matching with Indonesian and Filipino helpers, biodata, interviews, documents, arrival and after-placement support for families, working parents and elderly-care households.', li: ['Biodata review and interview', 'Childcare and elderly care helpers', 'Permit renewal and after-placement support'], more: 'Domestic helper services' },
-    introEyebrow: 'About Final Choice', introH: 'A licensed agency that explains the process before it asks for anything',
-    introP: ['Agensi Pekerjaan Final Choice Sdn Bhd is a licensed private employment agency in Taman Mutiara Barat, Kuala Lumpur. Our foreign worker team helps employers with recruitment, applications and documentation. Our domestic helper team helps families with matching, interviews, paperwork and support after placement.', 'We tell you what may apply to your situation first, we are clear about what we cannot promise, and decisions on approvals always rest with the relevant authorities.'],
-    introBtn: 'More about us',
+    tagFw: 'Foreign worker recruitment', tagMaid: 'Domestic helper agency',
+    altFw: 'Production worker operating machinery on a factory floor', altMaid: 'Final Choice domestic helper trainees in branded aprons during a cooking class at the Kuala Lumpur office',
+    cred: [
+      { i: 'shield', l: 'Agency licence', v: site.company.licence },
+      { i: 'file', l: T.footer.companyNo, v: site.company.registrationNo },
+      { i: 'pin', l: 'Office', v: 'Taman Mutiara Barat, Kuala Lumpur' },
+      { i: 'globe', l: 'Service area', v: site.company.serviceAreas.join(' & ') },
+    ],
+    aboutEyebrow: 'About Final Choice', aboutH: 'A licensed agency that explains the process before it asks for anything',
+    aboutP: 'Agensi Pekerjaan Final Choice Sdn Bhd is a licensed private employment agency in Taman Mutiara Barat, Kuala Lumpur. Our foreign worker team supports employers with recruitment, applications and documentation. Our domestic helper team supports families with matching, interviews, paperwork and care after placement.',
+    principles: [
+      { t: 'Requirements first', d: 'We explain what may apply to your situation before any document is prepared.' },
+      { t: 'Honest expectations', d: 'No guaranteed approvals or promised dates. Decisions rest with the relevant authorities.' },
+      { t: 'Direct contact', d: 'A separate consultant line for each service, by WhatsApp, phone or email.' },
+    ],
+    aboutBtn: 'More about us', aboutAlt: 'Final Choice domestic helper trainees at a cooking class in the Kuala Lumpur office', aboutCap: 'Helper training at our Kuala Lumpur office.',
+    svcEyebrow: 'Our services', svcH: 'Two services, equal commitment', svcLead: 'Employers and households each get a dedicated team, process and enquiry line.',
+    fw: { badge: 'For employers', h: 'Foreign Worker Recruitment', p: 'Eligibility checks, quota and application assistance, Section 60K, FWCMS / FWe Approval, documents and follow-up for factories, contractors, plantations, farms and service businesses.', li: ['Foreign worker recruitment', 'Quota and application assistance', 'Section 60K application', 'FWCMS / FWe Approval documents', 'Permit renewal', 'Document checking and follow-up'], btn: 'Foreign worker services', alt: 'Production worker operating machinery on a factory floor' },
+    maid: { badge: 'For households', h: 'Domestic Helper Agency', p: 'Matching with Indonesian and Filipino helpers, biodata, interviews, documents, arrival and after-placement support for working parents, families and elderly-care households.', li: ['Indonesian maid placement', 'Filipino maid placement', 'Biodata review and interviews', 'Childcare and elderly care helpers', 'Arrival and medical arrangements', 'Permit and contract renewal'], btn: 'Domestic helper services', alt: 'Domestic helper trainee in a Final Choice apron' },
     whyEyebrow: 'Why Final Choice', whyH: 'What you can expect when you work with us',
     why: [
       { i: 'shield', t: 'Licensed agency', d: 'Private employment agency licence JTKSM 483 (Category C), with company registration shown openly.' },
       { i: 'chat', t: 'Plain-language guidance', d: 'Each stage explained clearly, including what is expected of you.' },
       { i: 'file', t: 'Documents checked first', d: 'Your paperwork is checked and organised before anything is submitted.' },
-      { i: 'clock', t: 'Honest expectations', d: 'No guaranteed approvals and no promised dates. Decisions rest with the authorities.' },
-      { i: 'handshake', t: 'Direct contact', d: 'Speak to our consultant by WhatsApp, phone or email, with a separate line for each service.' },
-      { i: 'lock', t: 'Privacy respected', d: 'Candidate and employer information is kept confidential and shared only where agreed.' },
+      { i: 'clock', t: 'Honest expectations', d: 'No guaranteed approvals and no promised dates.' },
+      { i: 'handshake', t: 'Direct contact', d: 'Speak to our consultant by WhatsApp, phone or email.' },
+      { i: 'lock', t: 'Privacy respected', d: 'Candidate and employer information is kept confidential.' },
     ],
-    svcEyebrow: 'Our services', svcH: 'Everything in one place',
-    svcFw: 'Employers', svcMaid: 'Households',
-    svcFwList: ['Foreign worker recruitment', 'Quota and application assistance', 'Section 60K application', 'FWCMS and FWe Approval documents', 'Permit renewal', 'Change of employer, where applicable'],
-    svcMaidList: ['Indonesian maid placement', 'Filipino maid placement', 'Maid biodata and interviews', 'Childcare and elderly care helpers', 'Arrival and medical arrangements', 'Permit and contract renewal'],
-    procEyebrow: 'How it works', procH: 'A clear process for both services',
+    procEyebrow: 'How it works', procH: 'A clear process for both services', procNote: 'Steps vary with each case and current requirements. Approval is decided by the relevant authorities.',
     procFwH: 'Foreign workers', procMaidH: 'Domestic helpers',
     procFw: ['Tell us your requirements', 'Requirement and document check', 'Document preparation', 'Employer application', 'Approval and processing', 'Worker arrangement'],
     procMaid: ['Consultation', 'Candidate matching', 'Biodata review', 'Interview', 'Documentation', 'Application and approval', 'Arrival and orientation', 'Follow-up support'],
-    procNote: 'Steps vary with each case and current requirements. Approval is decided by the relevant authorities.',
     indEyebrow: 'Who we help', indH: 'Industries and household needs',
-    indLead: 'Employers across five sectors, and families with different care needs.',
+    indFw: 'Employer sectors', indMaid: 'Household needs', go: 'Learn more',
     sectors: [
-      { k: 'fwManufacturing', n: 'manufacturing', t: 'Manufacturing' },
-      { k: 'fwConstruction', n: 'construction', t: 'Construction' },
-      { k: 'fwServices', n: 'services', t: 'Services' },
-      { k: 'fwPlantation', n: 'plantation', t: 'Plantation' },
-      { k: 'fwAgriculture', n: 'agriculture', t: 'Agriculture' },
+      { k: 'fwManufacturing', i: 'factory', t: 'Manufacturing', d: 'Factories and manufacturing companies.' },
+      { k: 'fwConstruction', i: 'hammer', t: 'Construction', d: 'Contractors and construction companies.' },
+      { k: 'fwServices', i: 'store', t: 'Services', d: 'Eligible service-sector sub-sectors.' },
+      { k: 'fwPlantation', i: 'tree', t: 'Plantation', d: 'Estates and plantation operators.' },
+      { k: 'fwAgriculture', i: 'leaf', t: 'Agriculture', d: 'Farms and agricultural businesses.' },
     ],
     needs: [
       { k: 'maidChildcare', i: 'baby', t: 'Childcare', d: 'Helpers experienced with babies and children.' },
       { k: 'maidElderly', i: 'elderly', t: 'Elderly care', d: 'Helpers experienced in caring for seniors.' },
       { k: 'maid', i: 'cooking', t: 'Housekeeping and cooking', d: 'Daily household duties, subject to confirmed skills.' },
+      { k: 'maidBiodata', i: 'file', t: 'Maid biodata', d: 'Request biodata that fits your household.' },
+    ],
+    galEyebrow: 'Inside our office', galH: 'Helper training in Kuala Lumpur', galLead: 'Photographs from our own training sessions at the Kuala Lumpur office.',
+    gal: [
+      { n: 'group-1080', n2: 'group-800', w: 1080, h: 810, a: 'Final Choice trainees and trainer holding dumplings during a cooking class', c: 'Hands-on cooking class' },
+      { n: 'table-800', n2: 'table-480', w: 800, h: 600, a: 'Trainees in Final Choice aprons presenting dishes at a training table', c: 'Training in household cooking' },
+      { n: 'bowls-800', n2: 'bowls-480', w: 800, h: 600, a: 'Trainees with bowls of prepared food in front of the Final Choice banner', c: 'Practical sessions' },
+      { n: 'portrait-600', n2: 'portrait-400', w: 600, h: 800, a: 'Trainee in a Final Choice apron during a household skills session', c: 'Household skills' },
     ],
     faqH: 'Frequently asked questions', faqAll: 'See all FAQs',
     faq: [
@@ -67,52 +83,66 @@ const C = {
       { q: 'Is Final Choice a licensed employment agency?', a: 'Yes. Agensi Pekerjaan Final Choice Sdn Bhd (201201028954 / 1013441-H) holds private employment agency licence JTKSM 483 (Category C). You are welcome to verify it with the Labour Department (JTKSM).' },
       { q: 'Where is your office?', a: 'No. 58, Jalan Mutiara Barat 6, Taman Mutiara Barat, 56000 Kuala Lumpur. We serve employers and households in Kuala Lumpur and Selangor.' },
     ],
-    badge: 'Licensed agency', badgeSub: 'JTKSM 483 (Category C)', photoFw: 'Employers', photoMaid: 'Households',
-    heroAltFw: 'Smiling workers in safety helmets and high-visibility vests at an outdoor worksite', heroAltMaid: 'Domestic helper tidying a family home in Malaysia',
+    enqEyebrow: 'Enquire', enqH: 'Speak to a Final Choice consultant', enqP: 'Choose the service you need and tell us a little about your situation. There is no obligation after your first conversation.', tabFw: 'Foreign workers', tabMaid: 'Domestic helpers',
   },
   bm: {
     title: 'Pengambilan Pekerja Asing & Agensi Pembantu Rumah | Final Choice',
     description: 'Agensi berlesen (JTKSM 483) di Kuala Lumpur untuk pengambilan pekerja asing, permohonan kuota, Seksyen 60K dan FWCMS, serta pembantu rumah Indonesia dan Filipina.',
-    h1a: 'Rakan Dipercayai Anda untuk Pengambilan Pekerja Asing',
-    h1b: '& Perkhidmatan Pembantu Rumah di Malaysia',
+    h1a: 'Rakan Dipercayai Anda untuk Pengambilan Pekerja Asing', h1b: '& Perkhidmatan Pembantu Rumah di Malaysia',
     lead: 'Satu agensi berlesen di Kuala Lumpur untuk dua keperluan: membantu majikan mengambil pekerja asing dan menguruskan proses permohonan, serta membantu keluarga mencari pembantu rumah Indonesia atau Filipina yang sesuai.',
-    pathHead: 'Pilih laluan anda', pathLead: 'Keperluan berbeza, proses berbeza. Mulakan dengan yang sesuai untuk anda.',
-    fw: { tag: 'Untuk perniagaan', h: 'Pengambilan Pekerja Asing', p: 'Semakan kelayakan, bantuan kuota dan permohonan, Seksyen 60K, FWCMS / Kelulusan FWe dan penyediaan dokumen untuk kilang, kontraktor, ladang, ladang pertanian dan perniagaan perkhidmatan.', li: ['Permohonan kuota dan majikan', 'Semakan dokumen dan susulan', 'Pembuatan, pembinaan, perkhidmatan, perladangan, pertanian'], more: 'Perkhidmatan pekerja asing' },
-    maid: { tag: 'Untuk isi rumah', h: 'Agensi Pembantu Rumah', p: 'Pemadanan dengan pembantu Indonesia dan Filipina, biodata, temu duga, dokumen, ketibaan dan sokongan selepas penempatan untuk keluarga, ibu bapa bekerja dan isi rumah yang menjaga warga emas.', li: ['Semakan biodata dan temu duga', 'Pembantu jaga anak dan warga emas', 'Pembaharuan permit dan sokongan selepas penempatan'], more: 'Perkhidmatan pembantu rumah' },
-    introEyebrow: 'Tentang Final Choice', introH: 'Agensi berlesen yang menerangkan proses sebelum meminta apa-apa',
-    introP: ['Agensi Pekerjaan Final Choice Sdn Bhd ialah agensi pekerjaan swasta berlesen di Taman Mutiara Barat, Kuala Lumpur. Pasukan pekerja asing kami membantu majikan dengan pengambilan, permohonan dan dokumentasi. Pasukan pembantu rumah kami membantu keluarga dengan pemadanan, temu duga, dokumen dan sokongan selepas penempatan.', 'Kami memberitahu apa yang mungkin terpakai kepada keadaan anda dahulu, kami jelas tentang apa yang tidak boleh kami janjikan, dan keputusan kelulusan sentiasa terletak pada pihak berkuasa yang berkaitan.'],
-    introBtn: 'Lebih lanjut tentang kami',
+    tagFw: 'Pengambilan pekerja asing', tagMaid: 'Agensi pembantu rumah',
+    altFw: 'Pekerja pengeluaran mengendalikan mesin di lantai kilang', altMaid: 'Pelatih pembantu rumah Final Choice memakai apron berjenama semasa kelas memasak di pejabat Kuala Lumpur',
+    cred: [
+      { i: 'shield', l: 'Lesen agensi', v: site.company.licence },
+      { i: 'file', l: T.footer.companyNo, v: site.company.registrationNo },
+      { i: 'pin', l: 'Pejabat', v: 'Taman Mutiara Barat, Kuala Lumpur' },
+      { i: 'globe', l: 'Kawasan perkhidmatan', v: site.company.serviceAreas.join(' & ') },
+    ],
+    aboutEyebrow: 'Tentang Final Choice', aboutH: 'Agensi berlesen yang menerangkan proses sebelum meminta apa-apa',
+    aboutP: 'Agensi Pekerjaan Final Choice Sdn Bhd ialah agensi pekerjaan swasta berlesen di Taman Mutiara Barat, Kuala Lumpur. Pasukan pekerja asing kami menyokong majikan dengan pengambilan, permohonan dan dokumentasi. Pasukan pembantu rumah kami menyokong keluarga dengan pemadanan, temu duga, dokumen dan penjagaan selepas penempatan.',
+    principles: [
+      { t: 'Keperluan dahulu', d: 'Kami menerangkan apa yang mungkin terpakai sebelum sebarang dokumen disediakan.' },
+      { t: 'Jangkaan jujur', d: 'Tiada jaminan kelulusan atau tarikh dijanjikan. Keputusan terletak pada pihak berkuasa.' },
+      { t: 'Hubungan terus', d: 'Talian perunding berasingan untuk setiap perkhidmatan, melalui WhatsApp, telefon atau e-mel.' },
+    ],
+    aboutBtn: 'Lebih lanjut tentang kami', aboutAlt: 'Pelatih pembantu rumah Final Choice di kelas memasak di pejabat Kuala Lumpur', aboutCap: 'Latihan pembantu di pejabat Kuala Lumpur kami.',
+    svcEyebrow: 'Perkhidmatan kami', svcH: 'Dua perkhidmatan, komitmen yang sama', svcLead: 'Majikan dan isi rumah masing-masing mendapat pasukan, proses dan talian pertanyaan khusus.',
+    fw: { badge: 'Untuk majikan', h: 'Pengambilan Pekerja Asing', p: 'Semakan kelayakan, bantuan kuota dan permohonan, Seksyen 60K, FWCMS / Kelulusan FWe, dokumen dan susulan untuk kilang, kontraktor, ladang dan perniagaan perkhidmatan.', li: ['Pengambilan pekerja asing', 'Bantuan kuota dan permohonan', 'Permohonan Seksyen 60K', 'Dokumen FWCMS / Kelulusan FWe', 'Pembaharuan permit', 'Semakan dokumen dan susulan'], btn: 'Perkhidmatan pekerja asing', alt: 'Pekerja pengeluaran mengendalikan mesin di lantai kilang' },
+    maid: { badge: 'Untuk isi rumah', h: 'Agensi Pembantu Rumah', p: 'Pemadanan dengan pembantu Indonesia dan Filipina, biodata, temu duga, dokumen, ketibaan dan sokongan selepas penempatan untuk ibu bapa bekerja, keluarga dan isi rumah yang menjaga warga emas.', li: ['Penempatan pembantu rumah Indonesia', 'Penempatan pembantu rumah Filipina', 'Semakan biodata dan temu duga', 'Pembantu jaga anak dan warga emas', 'Pengaturan ketibaan dan perubatan', 'Pembaharuan permit dan kontrak'], btn: 'Perkhidmatan pembantu rumah', alt: 'Pelatih pembantu rumah memakai apron Final Choice' },
     whyEyebrow: 'Mengapa Final Choice', whyH: 'Apa yang anda boleh jangkakan bersama kami',
     why: [
       { i: 'shield', t: 'Agensi berlesen', d: 'Lesen agensi pekerjaan swasta JTKSM 483 (Kategori C), dengan pendaftaran syarikat dipaparkan secara terbuka.' },
       { i: 'chat', t: 'Panduan bahasa mudah', d: 'Setiap peringkat diterangkan dengan jelas, termasuk apa yang dijangka daripada anda.' },
       { i: 'file', t: 'Dokumen disemak dahulu', d: 'Dokumen anda disemak dan disusun sebelum sebarang penghantaran.' },
-      { i: 'clock', t: 'Jangkaan jujur', d: 'Tiada jaminan kelulusan dan tiada tarikh dijanjikan. Keputusan terletak pada pihak berkuasa.' },
-      { i: 'handshake', t: 'Hubungan terus', d: 'Berbual dengan perunding kami melalui WhatsApp, telefon atau e-mel, dengan talian berasingan untuk setiap perkhidmatan.' },
-      { i: 'lock', t: 'Privasi dihormati', d: 'Maklumat calon dan majikan dirahsiakan dan dikongsi hanya apabila dipersetujui.' },
+      { i: 'clock', t: 'Jangkaan jujur', d: 'Tiada jaminan kelulusan dan tiada tarikh dijanjikan.' },
+      { i: 'handshake', t: 'Hubungan terus', d: 'Berbual dengan perunding kami melalui WhatsApp, telefon atau e-mel.' },
+      { i: 'lock', t: 'Privasi dihormati', d: 'Maklumat calon dan majikan dirahsiakan.' },
     ],
-    svcEyebrow: 'Perkhidmatan kami', svcH: 'Semuanya di satu tempat',
-    svcFw: 'Majikan', svcMaid: 'Isi rumah',
-    svcFwList: ['Pengambilan pekerja asing', 'Bantuan kuota dan permohonan', 'Permohonan Seksyen 60K', 'Dokumen FWCMS dan Kelulusan FWe', 'Pembaharuan permit', 'Tukar majikan, jika berkenaan'],
-    svcMaidList: ['Penempatan pembantu rumah Indonesia', 'Penempatan pembantu rumah Filipina', 'Biodata dan temu duga pembantu', 'Pembantu jaga anak dan warga emas', 'Pengaturan ketibaan dan perubatan', 'Pembaharuan permit dan kontrak'],
-    procEyebrow: 'Bagaimana ia berfungsi', procH: 'Proses yang jelas untuk kedua-dua perkhidmatan',
+    procEyebrow: 'Bagaimana ia berfungsi', procH: 'Proses yang jelas untuk kedua-dua perkhidmatan', procNote: 'Langkah berbeza mengikut kes dan keperluan semasa. Kelulusan diputuskan oleh pihak berkuasa yang berkaitan.',
     procFwH: 'Pekerja asing', procMaidH: 'Pembantu rumah',
     procFw: ['Beritahu keperluan anda', 'Semakan keperluan dan dokumen', 'Penyediaan dokumen', 'Permohonan majikan', 'Kelulusan dan pemprosesan', 'Pengaturan pekerja'],
     procMaid: ['Perundingan', 'Pemadanan calon', 'Semakan biodata', 'Temu duga', 'Dokumentasi', 'Permohonan dan kelulusan', 'Ketibaan dan orientasi', 'Sokongan susulan'],
-    procNote: 'Langkah berbeza mengikut kes dan keperluan semasa. Kelulusan diputuskan oleh pihak berkuasa yang berkaitan.',
     indEyebrow: 'Siapa yang kami bantu', indH: 'Industri dan keperluan isi rumah',
-    indLead: 'Majikan dalam lima sektor, dan keluarga dengan keperluan penjagaan berbeza.',
+    indFw: 'Sektor majikan', indMaid: 'Keperluan isi rumah', go: 'Ketahui lanjut',
     sectors: [
-      { k: 'fwManufacturing', n: 'manufacturing', t: 'Pembuatan' },
-      { k: 'fwConstruction', n: 'construction', t: 'Pembinaan' },
-      { k: 'fwServices', n: 'services', t: 'Perkhidmatan' },
-      { k: 'fwPlantation', n: 'plantation', t: 'Perladangan' },
-      { k: 'fwAgriculture', n: 'agriculture', t: 'Pertanian' },
+      { k: 'fwManufacturing', i: 'factory', t: 'Pembuatan', d: 'Kilang dan syarikat pembuatan.' },
+      { k: 'fwConstruction', i: 'hammer', t: 'Pembinaan', d: 'Kontraktor dan syarikat pembinaan.' },
+      { k: 'fwServices', i: 'store', t: 'Perkhidmatan', d: 'Subsektor perkhidmatan yang layak.' },
+      { k: 'fwPlantation', i: 'tree', t: 'Perladangan', d: 'Estet dan pengusaha ladang.' },
+      { k: 'fwAgriculture', i: 'leaf', t: 'Pertanian', d: 'Ladang dan perniagaan pertanian.' },
     ],
     needs: [
-      { k: 'maidChildcare', i: 'baby', t: 'Jaga anak', d: 'Pembantu berpengalaman dengan bayi dan kanak-kanak.' },
-      { k: 'maidElderly', i: 'elderly', t: 'Jaga warga emas', d: 'Pembantu berpengalaman menjaga warga emas.' },
+      { k: 'maid', i: 'baby', t: 'Jaga anak', d: 'Pembantu berpengalaman dengan bayi dan kanak-kanak.' },
+      { k: 'maid', i: 'elderly', t: 'Jaga warga emas', d: 'Pembantu berpengalaman menjaga warga emas.' },
       { k: 'maid', i: 'cooking', t: 'Kerja rumah dan memasak', d: 'Tugas harian rumah, tertakluk kepada kemahiran yang disahkan.' },
+      { k: 'maidBiodata', i: 'file', t: 'Biodata pembantu', d: 'Minta biodata yang sesuai dengan isi rumah anda.' },
+    ],
+    galEyebrow: 'Di dalam pejabat kami', galH: 'Latihan pembantu di Kuala Lumpur', galLead: 'Gambar daripada sesi latihan kami sendiri di pejabat Kuala Lumpur.',
+    gal: [
+      { n: 'group-1080', n2: 'group-800', w: 1080, h: 810, a: 'Pelatih dan jurulatih Final Choice memegang ladu semasa kelas memasak', c: 'Kelas memasak amali' },
+      { n: 'table-800', n2: 'table-480', w: 800, h: 600, a: 'Pelatih memakai apron Final Choice mempersembahkan hidangan di meja latihan', c: 'Latihan memasak di rumah' },
+      { n: 'bowls-800', n2: 'bowls-480', w: 800, h: 600, a: 'Pelatih dengan mangkuk makanan di hadapan sepanduk Final Choice', c: 'Sesi amali' },
+      { n: 'portrait-600', n2: 'portrait-400', w: 600, h: 800, a: 'Pelatih memakai apron Final Choice semasa sesi kemahiran rumah', c: 'Kemahiran rumah' },
     ],
     faqH: 'Soalan lazim', faqAll: 'Lihat semua soalan lazim',
     faq: [
@@ -123,144 +153,126 @@ const C = {
       { q: 'Adakah Final Choice agensi pekerjaan berlesen?', a: 'Ya. Agensi Pekerjaan Final Choice Sdn Bhd (201201028954 / 1013441-H) memegang lesen agensi pekerjaan swasta JTKSM 483 (Kategori C). Anda dialu-alukan mengesahkannya dengan Jabatan Tenaga Kerja (JTKSM).' },
       { q: 'Di mana pejabat anda?', a: 'No. 58, Jalan Mutiara Barat 6, Taman Mutiara Barat, 56000 Kuala Lumpur. Kami melayani majikan dan isi rumah di Kuala Lumpur dan Selangor.' },
     ],
-    badge: 'Agensi berlesen', badgeSub: 'JTKSM 483 (Kategori C)', photoFw: 'Majikan', photoMaid: 'Isi rumah',
-    heroAltFw: 'Pekerja tersenyum memakai topi keledar dan jaket keselamatan di tapak kerja', heroAltMaid: 'Pembantu rumah mengemas rumah keluarga di Malaysia',
+    enqEyebrow: 'Pertanyaan', enqH: 'Bercakap dengan perunding Final Choice', enqP: 'Pilih perkhidmatan yang anda perlukan dan ceritakan sedikit tentang keadaan anda. Anda tidak perlu meneruskan selepas perbualan pertama.', tabFw: 'Pekerja asing', tabMaid: 'Pembantu rumah',
   },
 }[lang];
-const sectorHref = (k: string) => href(path(lang, k as never));
-const hasBm = (k: string) => lang === 'en' || ['fw', 'maid'].includes(k);
+const ti = (k: PageKey) => (hasLang(k, lang) ? p(k) : p(k === 'home' ? 'home' : 'maid'));
+const tileHref = (k: PageKey) => (hasLang(k, lang) ? p(k) : p(k.startsWith('fw') ? 'fw' : 'maid', k.startsWith('fw') ? 'sectors' : ''));
 ---
 <BaseLayout lang={lang} pageKey="home" title={C.title} description={C.description} waMessage={T.wa.general}>
-  <section class="hero hero--home" aria-labelledby="hero-h">
-    <div class="container hero__grid">
-      <div class="hero__copy">
-        <p class="eyebrow"><Icon name="shield" size={14} /> {site.company.licence}</p>
+  <section class="hero-pro" aria-labelledby="hero-h">
+    <div class="hero-pro__media" aria-hidden="false">
+      <figure>
+        <img src={asset('images/sector-manufacturing-photo-640.webp')} srcset={`${asset('images/sector-manufacturing-photo-640.webp')} 640w, ${asset('images/sector-manufacturing-photo-1280.webp')} 1280w`} sizes="50vw" width="1280" height="640" alt={C.altFw} fetchpriority="high" />
+      </figure>
+      <figure>
+        <img src={asset('images/training/training-group-480.webp')} srcset={`${asset('images/training/training-group-480.webp')} 480w, ${asset('images/training/training-group-800.webp')} 800w, ${asset('images/training/training-group-1080.webp')} 1080w`} sizes="50vw" width="1080" height="810" alt={C.altMaid} />
+      </figure>
+    </div>
+    <div class="hero-pro__shade"></div>
+    <span class="hero-pro__tag hero-pro__tag--l">{C.tagFw}</span>
+    <span class="hero-pro__tag hero-pro__tag--r">{C.tagMaid}</span>
+    <div class="container hero-pro__inner">
+      <div class="hero-pro__copy">
+        <p class="eyebrow">{site.company.legalName}</p>
         <h1 id="hero-h">{C.h1a} <span>{C.h1b}</span></h1>
         <p class="lead">{C.lead}</p>
         <div class="btn-row">
           <a class="btn btn--primary btn--lg" href={p('fw')} data-track="hero_fw">{T.btn.hireFw} <Icon name="arrow" size={18} /></a>
           <a class="btn btn--accent btn--lg" href={p('maid')} data-track="hero_maid">{T.btn.findMaid} <Icon name="arrow" size={18} /></a>
         </div>
-        <ul class="hero__trust">
-          <li><Icon name="check" size={18} /> {T.footer.companyNo} {site.company.registrationNo}</li>
-          <li><Icon name="pin" size={18} /> {site.company.serviceAreas.join(' & ')}</li>
-        </ul>
-      </div>
-      <div class="hero__duo">
-        <figure class="hero__duo-a">
-          <img src={asset('images/hero-foreign-workers-480.webp')} srcset={`${asset('images/hero-foreign-workers-480.webp')} 480w, ${asset('images/hero-foreign-workers-800.webp')} 800w`} sizes="(min-width: 900px) 300px, 45vw" width="1200" height="900" alt={C.heroAltFw} fetchpriority="high" />
-          <figcaption>{C.photoFw}</figcaption>
-        </figure>
-        <figure class="hero__duo-b">
-          <img src={asset('images/home-helper-housekeeping-480.webp')} srcset={`${asset('images/home-helper-housekeeping-480.webp')} 480w, ${asset('images/home-helper-housekeeping-640.webp')} 640w`} sizes="(min-width: 900px) 300px, 45vw" width="1024" height="683" alt={C.heroAltMaid} />
-          <figcaption>{C.photoMaid}</figcaption>
-        </figure>
-        <div class="hero__badge">
-          <Icon name="shield" size={26} />
-          <div><strong>{C.badge}</strong><span>{C.badgeSub}</span></div>
-        </div>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="path-h">
+  <section class="cred" aria-label={T.sections.verified}>
     <div class="container">
-      <div class="section-head section-head--center reveal"><h2 id="path-h">{C.pathHead}</h2><p>{C.pathLead}</p></div>
-      <div class="grid grid--2">
-        <article class="path-card path-card--fw reveal">
-          <img src={asset('images/sector-manufacturing-photo-640.webp')} alt="" width="640" height="320" loading="lazy" decoding="async" />
-          <div class="path-card__body">
-            <p class="path-card__tag">{C.fw.tag}</p>
-            <h3>{C.fw.h}</h3>
-            <p>{C.fw.p}</p>
-            <ul class="ticks">{C.fw.li.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-            <div class="btn-row">
-              <a class="btn btn--primary" href={p('fw')}>{C.fw.more} <Icon name="arrow" size={16} /></a>
-              <a class="btn btn--outline" href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener" data-track="path_fw_wa"><Icon name="whatsapp" size={18} /> {site.contact.fw.display}</a>
-            </div>
+      <div class="cred__grid reveal">
+        {C.cred.map((c) => (
+          <div class="cred__item">
+            <span class="cred__icon"><Icon name={c.i} size={22} /></span>
+            <div><span>{c.l}</span><strong>{c.v}</strong></div>
           </div>
-        </article>
-        <article class="path-card path-card--maid reveal" style="--d:100ms">
-          <img src={asset('images/home-helper-housekeeping-640.webp')} alt="" width="640" height="427" loading="lazy" decoding="async" />
-          <div class="path-card__body">
-            <p class="path-card__tag">{C.maid.tag}</p>
-            <h3>{C.maid.h}</h3>
-            <p>{C.maid.p}</p>
-            <ul class="ticks">{C.maid.li.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-            <div class="btn-row">
-              <a class="btn btn--accent" href={p('maid')}>{C.maid.more} <Icon name="arrow" size={16} /></a>
-              <a class="btn btn--outline" href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener" data-track="path_maid_wa"><Icon name="whatsapp" size={18} /> {site.contact.maid.display}</a>
-            </div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--tint" aria-labelledby="intro-h">
-    <div class="container split">
-      <div class="reveal">
-        <p class="eyebrow">{C.introEyebrow}</p>
-        <h2 id="intro-h">{C.introH}</h2>
-        {C.introP.map((x) => <p>{x}</p>)}
-        <p><a class="btn btn--outline" href={p('about')}>{C.introBtn} <Icon name="arrow" size={16} /></a></p>
-      </div>
-      <div class="info-panel reveal" style="--d:100ms">
-        <h3>{T.sections.verified}</h3>
-        <div class="trust-rows">
-          <p><span>{T.sections.licence}</span><strong>{site.company.licence}</strong></p>
-          <p><span>{T.footer.companyNo}</span><strong>{site.company.registrationNo}</strong></p>
-          <p><span>{T.sections.office}</span><strong>{site.company.address.street}, {site.company.address.postcode} {site.company.address.city}</strong></p>
-          <p><span>{T.sections.hours}</span><strong>{site.company.hours.map((h) => `${T.hours[h.key]}: ${h.opens}–${h.closes}`).join(' · ')}</strong></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="why-h">
-    <div class="container">
-      <div class="section-head section-head--center reveal"><p class="eyebrow">{C.whyEyebrow}</p><h2 id="why-h">{C.whyH}</h2></div>
-      <div class="grid grid--3">
-        {C.why.map((w, i) => (
-          <article class="card need-card reveal" style={`--d:${i * 70}ms`}>
-            <span class="card__icon"><Icon name={w.i} size={24} /></span>
-            <div><h3>{w.t}</h3><p>{w.d}</p></div>
-          </article>
         ))}
       </div>
     </div>
   </section>
 
+  <section class="section" aria-labelledby="about-h">
+    <div class="container about-grid">
+      <div class="reveal">
+        <p class="eyebrow">{C.aboutEyebrow}</p>
+        <h2 id="about-h">{C.aboutH}</h2>
+        <p class="lead">{C.aboutP}</p>
+        <ul class="principles">
+          {C.principles.map((x) => <li><Icon name="check" size={20} /><div><strong>{x.t}</strong><span>{x.d}</span></div></li>)}
+        </ul>
+        <a class="btn btn--outline" href={p('about')}>{C.aboutBtn} <Icon name="arrow" size={16} /></a>
+      </div>
+      <figure class="about-grid__media reveal" style="--d:120ms">
+        <img src={asset('images/training/training-table-800.webp')} srcset={`${asset('images/training/training-table-480.webp')} 480w, ${asset('images/training/training-table-800.webp')} 800w, ${asset('images/training/training-table-1280.webp')} 1280w`} sizes="(min-width: 900px) 560px, 100vw" width="1280" height="960" alt={C.aboutAlt} loading="lazy" decoding="async" />
+        <figcaption>{C.aboutCap}</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="section section--tint" aria-labelledby="svc-h">
     <div class="container">
-      <div class="section-head section-head--center reveal"><p class="eyebrow">{C.svcEyebrow}</p><h2 id="svc-h">{C.svcH}</h2></div>
-      <div class="grid grid--2">
-        <div class="card reveal">
-          <h3><Icon name="building" size={22} /> {C.svcFw}</h3>
-          <ul class="ticks">{C.svcFwList.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-          <a class="btn btn--primary btn--sm" href={p('fw')}>{C.fw.more} <Icon name="arrow" size={16} /></a>
+      <div class="section-head reveal"><p class="eyebrow">{C.svcEyebrow}</p><h2 id="svc-h">{C.svcH}</h2><p>{C.svcLead}</p></div>
+      <article class="svc svc--fw reveal">
+        <div class="svc__media">
+          <img src={asset('images/sector-manufacturing-photo-640.webp')} srcset={`${asset('images/sector-manufacturing-photo-640.webp')} 640w, ${asset('images/sector-manufacturing-photo-1280.webp')} 1280w`} sizes="(min-width: 960px) 560px, 100vw" width="1280" height="640" alt={C.fw.alt} loading="lazy" decoding="async" style="object-position: 62% 50%" />
+          <span class="svc__badge">{C.fw.badge}</span>
         </div>
-        <div class="card reveal" style="--d:100ms">
-          <h3><Icon name="home" size={22} /> {C.svcMaid}</h3>
-          <ul class="ticks">{C.svcMaidList.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
-          <a class="btn btn--accent btn--sm" href={p('maid')}>{C.maid.more} <Icon name="arrow" size={16} /></a>
+        <div class="svc__body">
+          <h3>{C.fw.h}</h3>
+          <p>{C.fw.p}</p>
+          <ul class="svc-list">{C.fw.li.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={p('fw')}>{C.fw.btn} <Icon name="arrow" size={16} /></a>
+            <a class="btn btn--outline" href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener" data-track="svc_fw_wa"><Icon name="whatsapp" size={18} /> {site.contact.fw.display}</a>
+          </div>
         </div>
+      </article>
+      <article class="svc svc--maid svc--reverse reveal">
+        <div class="svc__media">
+          <img src={asset('images/training/training-portrait-600.webp')} srcset={`${asset('images/training/training-portrait-400.webp')} 400w, ${asset('images/training/training-portrait-600.webp')} 600w, ${asset('images/training/training-portrait-810.webp')} 810w`} sizes="(min-width: 960px) 520px, 100vw" width="810" height="1080" alt={C.maid.alt} loading="lazy" decoding="async" style="object-position: 50% 30%" />
+          <span class="svc__badge">{C.maid.badge}</span>
+        </div>
+        <div class="svc__body">
+          <h3>{C.maid.h}</h3>
+          <p>{C.maid.p}</p>
+          <ul class="svc-list">{C.maid.li.map((x) => <li><Icon name="check" size={18} /> <span>{x}</span></li>)}</ul>
+          <div class="btn-row">
+            <a class="btn btn--accent" href={p('maid')}>{C.maid.btn} <Icon name="arrow" size={16} /></a>
+            <a class="btn btn--outline" href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener" data-track="svc_maid_wa"><Icon name="whatsapp" size={18} /> {site.contact.maid.display}</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="why-h">
+    <div class="container">
+      <div class="section-head reveal"><p class="eyebrow">{C.whyEyebrow}</p><h2 id="why-h">{C.whyH}</h2></div>
+      <div class="why-grid reveal">
+        {C.why.map((w) => (
+          <article class="why-card"><Icon name={w.i} size={30} /><h3>{w.t}</h3><p>{w.d}</p></article>
+        ))}
       </div>
     </div>
   </section>
 
   <section class="section" aria-labelledby="proc-h">
     <div class="container">
-      <div class="section-head section-head--center reveal"><p class="eyebrow">{C.procEyebrow}</p><h2 id="proc-h">{C.procH}</h2></div>
-      <div class="grid grid--2">
-        <div class="reveal">
-          <h3 class="proc-h proc-h--fw">{C.procFwH}</h3>
-          <ol class="process process--compact">{C.procFw.map((s, i) => <li class="process__step"><span class="process__num" aria-hidden="true">{i + 1}</span><div class="process__body"><p><strong>{s}</strong></p></div></li>)}</ol>
-        </div>
-        <div class="reveal" style="--d:100ms">
-          <h3 class="proc-h proc-h--maid">{C.procMaidH}</h3>
-          <ol class="process process--compact process--maid">{C.procMaid.map((s, i) => <li class="process__step"><span class="process__num" aria-hidden="true">{i + 1}</span><div class="process__body"><p><strong>{s}</strong></p></div></li>)}</ol>
-        </div>
+      <div class="section-head reveal"><p class="eyebrow">{C.procEyebrow}</p><h2 id="proc-h">{C.procH}</h2></div>
+      <div class="proc reveal">
+        <div class="proc__head"><span class="proc__pill">{T.strip.fw}</span><h3>{C.procFwH}</h3></div>
+        <ol class="proc__list" style={`--n:${C.procFw.length}`}>{C.procFw.map((s) => <li>{s}</li>)}</ol>
+      </div>
+      <div class="proc proc--maid reveal">
+        <div class="proc__head"><span class="proc__pill">{T.strip.maid}</span><h3>{C.procMaidH}</h3></div>
+        <ol class="proc__list" style={`--n:${C.procMaid.length}`}>{C.procMaid.map((s) => <li>{s}</li>)}</ol>
       </div>
       <p class="callout callout--warn reveal"><Icon name="clock" size={18} /> <span>{C.procNote}</span></p>
     </div>
@@ -268,34 +280,49 @@ const hasBm = (k: string) => lang === 'en' || ['fw', 'maid'].includes(k);
 
   <section class="section section--tint" aria-labelledby="ind-h">
     <div class="container">
-      <div class="section-head section-head--center reveal"><p class="eyebrow">{C.indEyebrow}</p><h2 id="ind-h">{C.indH}</h2><p>{C.indLead}</p></div>
-      <div class="sector-grid">
-        {C.sectors.map((s, i) => (
-          lang === 'en' ? (
-            <a class="sector-tile reveal" style={`--d:${i * 60}ms`} href={sectorHref(s.k)}>
-              <img src={asset(`images/sector-${s.n}-photo-640.webp`)} alt="" width="640" height="320" loading="lazy" decoding="async" />
-              <span>{s.t}</span>
+      <div class="section-head reveal"><p class="eyebrow">{C.indEyebrow}</p><h2 id="ind-h">{C.indH}</h2></div>
+      <div class="tile-group reveal">
+        <h3 class="tile-group__title">{C.indFw}</h3>
+        <div class="tile-grid">
+          {C.sectors.map((s) => (
+            <a class="tile" href={tileHref(s.k as PageKey)}>
+              <span class="tile__icon"><Icon name={s.i} size={26} /></span>
+              <h4>{s.t}</h4><p>{s.d}</p>
+              <span class="tile__go">{C.go} <Icon name="arrow" size={14} /></span>
             </a>
-          ) : (
-            <a class="sector-tile reveal" style={`--d:${i * 60}ms`} href={p('fw', 'sectors')}>
-              <img src={asset(`images/sector-${s.n}-photo-640.webp`)} alt="" width="640" height="320" loading="lazy" decoding="async" />
-              <span>{s.t}</span>
-            </a>
-          )
-        ))}
+          ))}
+        </div>
       </div>
-      <div class="grid grid--3 needs-row">
-        {C.needs.map((n, i) => (
-          <a class="card need-card card--link reveal" style={`--d:${i * 70}ms`} href={lang === 'en' ? sectorHref(n.k) : p('maid')}>
-            <span class="card__icon card__icon--maid"><Icon name={n.i} size={24} /></span>
-            <div><h3>{n.t}</h3><p>{n.d}</p></div>
-          </a>
+      <div class="tile-group reveal">
+        <h3 class="tile-group__title">{C.indMaid}</h3>
+        <div class="tile-grid">
+          {C.needs.map((n) => (
+            <a class="tile tile--maid" href={tileHref(n.k as PageKey)}>
+              <span class="tile__icon"><Icon name={n.i} size={26} /></span>
+              <h4>{n.t}</h4><p>{n.d}</p>
+              <span class="tile__go">{C.go} <Icon name="arrow" size={14} /></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="gal-h">
+    <div class="container">
+      <div class="section-head reveal"><p class="eyebrow">{C.galEyebrow}</p><h2 id="gal-h">{C.galH}</h2><p>{C.galLead}</p></div>
+      <div class="gal reveal">
+        {C.gal.map((g, i) => (
+          <figure>
+            <img src={asset(`images/training/training-${i === 0 ? g.n : g.n}.webp`)} srcset={i === 0 ? `${asset('images/training/training-group-800.webp')} 800w, ${asset('images/training/training-group-1080.webp')} 1080w` : `${asset(`images/training/training-${g.n2}.webp`)} 480w, ${asset(`images/training/training-${g.n}.webp`)} 800w`} sizes={i === 0 ? '(min-width: 760px) 50vw, 100vw' : '(min-width: 760px) 28vw, 50vw'} width={g.w} height={g.h} alt={g.a} loading="lazy" decoding="async" />
+            <figcaption>{g.c}</figcaption>
+          </figure>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="faq-h">
+  <section class="section section--tint" aria-labelledby="faq-h">
     <div class="container">
       <div class="section-head section-head--center reveal"><h2 id="faq-h">{C.faqH}</h2></div>
       <div class="faq">
@@ -306,6 +333,45 @@ const hasBm = (k: string) => lang === 'en' || ['fw', 'maid'].includes(k);
       <p class="center"><a class="btn btn--outline" href={p('faq')}>{C.faqAll} <Icon name="arrow" size={16} /></a></p>
     </div>
   </section>
+
+  <section class="section" id="enquire" aria-labelledby="enq-h">
+    <div class="container enq">
+      <div class="enq__intro reveal">
+        <p class="eyebrow">{C.enqEyebrow}</p>
+        <h2 id="enq-h">{C.enqH}</h2>
+        <p class="lead">{C.enqP}</p>
+        <ul class="contact-list">
+          <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener">{T.strip.fw}: {site.contact.fw.display}</a></li>
+          <li><Icon name="whatsapp" size={18} /><a href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener">{T.strip.maid}: {site.contact.maid.display}</a></li>
+          <li><Icon name="mail" size={18} /><a href={`mailto:${site.company.email}`}>{site.company.email}</a></li>
+          <li><Icon name="clock" size={18} /><span>{hours}</span></li>
+        </ul>
+      </div>
+      <div class="reveal" style="--d:120ms">
+        <div class="enq__tabs" role="tablist" aria-label={T.sections.enquire}>
+          <button class="enq__tab" role="tab" type="button" id="tab-fw" data-line="fw" aria-selected="true" aria-controls="panel-fw">{C.tabFw}</button>
+          <button class="enq__tab" role="tab" type="button" id="tab-maid" data-line="maid" aria-selected="false" aria-controls="panel-maid" tabindex="-1">{C.tabMaid}</button>
+        </div>
+        <div class="enq__panel" role="tabpanel" id="panel-fw" aria-labelledby="tab-fw"><EnquiryForm lang={lang} track="fw" /></div>
+        <div class="enq__panel" role="tabpanel" id="panel-maid" aria-labelledby="tab-maid" hidden><EnquiryForm lang={lang} track="maid" /></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.enq__tab')];
+    const show = (line: string) => {
+      tabs.forEach((t) => { const on = t.dataset.line === line; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      document.querySelectorAll<HTMLElement>('.enq__panel').forEach((p) => { p.hidden = p.id !== `panel-${line}`; });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(t.dataset.line!));
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = tabs[(i + 1) % tabs.length]; show(n.dataset.line!); n.focus(); e.preventDefault(); }
+      });
+    });
+    if (location.hash === '#enquire-maid') show('maid');
+  </script>
 
   <CtaBand lang={lang} track="main" headingId="cta-h" />
 </BaseLayout>

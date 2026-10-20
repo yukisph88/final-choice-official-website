@@ -4,7 +4,7 @@
 import type { PageSet, Block, QA } from './types';
 import { SRC, SRC_BM } from './types';
 
-const img = { src: 'images/hero-foreign-workers-800.webp', src2: 'images/hero-foreign-workers-1200.webp', alt: 'Smiling workers in safety helmets and high-visibility vests at an outdoor worksite', w: 1200, h: 900 };
+const img = { src: 'images/sector-manufacturing-photo-640.webp', src2: 'images/sector-manufacturing-photo-1280.webp', alt: 'Production worker operating machinery on a factory floor', w: 1280, h: 640 };
 const sectorImg = (name: string, alt: string) => ({ src: `images/sector-${name}-photo-640.webp`, src2: `images/sector-${name}-photo-1280.webp`, alt, w: 1280, h: 640 });
 
 const steps6 = [
@@ -341,7 +341,6 @@ export const fwPages: PageSet = {
       h1: 'Foreign Workers for Construction Companies in Malaysia',
       eyebrow: 'Sector: construction',
       lead: 'Contractors and construction companies usually need to satisfy sector-specific registration requirements in addition to the general employer applications. Final Choice helps you see what applies and prepare the documents.',
-      image: sectorImg('construction', 'Construction workers on a building site wearing safety equipment'),
       wa: 'Hello Final Choice, we are a construction company and would like to enquire about foreign workers.',
       blocks: [
         { h2: 'What construction employers should prepare', bullets: ['Company registration documents', 'Contractor and construction-related registrations, where applicable', 'Details of current projects and sites', 'Financial or tax records', 'Records of current local and foreign workers', 'Worker accommodation arrangements, including site or off-site housing, where applicable', 'Details of the positions and number of workers needed'], note: 'Which registrations and approvals apply to your company depends on your business and current regulations. We help you find out before you start the application.' },
@@ -364,7 +363,6 @@ export const fwPages: PageSet = {
       h1: 'Foreign Workers for the Services Sector in Malaysia',
       eyebrow: 'Sector: services',
       lead: 'The services sector covers many different businesses, and only certain sub-sectors and positions are open to foreign workers. Final Choice helps you check whether yours qualifies and prepare the application.',
-      image: sectorImg('services', 'Service staff working in a commercial building'),
       wa: 'Hello Final Choice, we are in the services sector and would like to enquire about foreign workers.',
       blocks: [
         { h2: 'Eligibility is sub-sector specific', paras: ['Unlike manufacturing or plantation, the services sector is a broad category. Eligible sub-sectors, such as cleaning services, and permitted positions are set by current policy, and they are reviewed from time to time. We will not tell you an application is straightforward until we have checked your sub-sector against the current rules.'] },
@@ -386,7 +384,6 @@ export const fwPages: PageSet = {
       h1: 'Foreign Workers for Plantation Employers in Malaysia',
       eyebrow: 'Sector: plantation',
       lead: 'Estates and plantation operators need field workers throughout the year. Final Choice helps plantation employers prepare their applications and documents, subject to current sector requirements.',
-      image: sectorImg('plantation', 'Plantation workers in a Malaysian estate'),
       wa: 'Hello Final Choice, we operate a plantation and would like to enquire about foreign workers.',
       blocks: [
         { h2: 'What plantation employers should prepare', bullets: ['Company registration documents', 'Land and estate documents, and plantation-related licences or registrations, where applicable', 'Details of the crop, area and work required', 'Financial or tax records', 'Records of current local and foreign workers', 'Worker accommodation arrangements, which matter particularly for estates', 'Details of positions and number of workers needed'], note: 'Sector-specific agencies may be involved in plantation applications. We confirm the current process with you before you start.' },

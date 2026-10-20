@@ -52,6 +52,10 @@ const waMsg = track === 'maid' ? T.wa.maidHome : track === 'fw' ? T.wa.fwHome : 
       <a class="btn btn--wa main-nav__cta" href={whatsappLink(waLine, waMsg)} target="_blank" rel="noopener" data-track="whatsapp_header">
         <Icon name="whatsapp" size={18} /> {T.btn.whatsappUs}
       </a>
+      <div class="main-nav__foot">
+        <a class="btn btn--wa btn--lg" href={whatsappLink('fw', T.wa.fwHome)} target="_blank" rel="noopener" data-track="menu_wa_fw"><Icon name="whatsapp" size={20} /> {T.strip.fw}: {site.contact.fw.display}</a>
+        <a class="btn btn--wa btn--lg" href={whatsappLink('maid', T.wa.maidHome)} target="_blank" rel="noopener" data-track="menu_wa_maid"><Icon name="whatsapp" size={20} /> {T.strip.maid}: {site.contact.maid.display}</a>
+      </div>
     </nav>
 
     <div class="lang-switch" role="group" aria-label={T.nav.language}>

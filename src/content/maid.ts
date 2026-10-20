@@ -3,7 +3,7 @@
 import type { PageSet, Block } from './types';
 import { SRC, SRC_BM } from './types';
 
-const hero = { src: 'images/home-helper-housekeeping-640.webp', src2: 'images/home-helper-housekeeping-1024.webp', alt: 'Domestic helper tidying a family home in Malaysia', w: 1024, h: 683 };
+const hero = { src: 'images/training/training-table-800.webp', src2: 'images/training/training-table-1280.webp', alt: 'Final Choice domestic helper trainees in branded aprons presenting dishes at a training table in the Kuala Lumpur office', w: 1280, h: 960 };
 
 const steps8 = [
   { t: 'Consultation', d: 'Tell us about your household, the main duties and your preferences.' },
