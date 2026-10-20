@@ -9,7 +9,7 @@ const sets = [
   { src: 'photo-source/training-group.webp', out: 'public/images/training/training-group', sizes: [1080, 800, 480], b: 1.06 },
   { src: 'photo-source/training-bowls.webp', out: 'public/images/training/training-bowls', sizes: [1080, 800, 480], b: 1.06 },
   { src: 'photo-source/training-portrait.webp', out: 'public/images/training/training-portrait', sizes: [810, 600, 400], b: 1.06 },
-  { src: 'photo-source/sector-manufacturing.webp', out: 'public/images/sector-manufacturing-photo', sizes: [1280, 640], b: 1.1 },
+  { src: 'photo-source/sector-manufacturing.webp', out: 'public/images/sector-manufacturing-photo', sizes: [1280, 960, 640], b: 1.1 },
   { src: 'photo-source/sector-agriculture.webp', out: 'public/images/sector-agriculture-photo', sizes: [1280, 640], b: 1.08 },
 ];
 
@@ -32,7 +32,7 @@ for (const s of sets) {
       .modulate({ brightness: s.b, saturation: 1.07 })
       .linear(1.06, -5) // gentle contrast
       .sharpen({ sigma: 0.7, m1: 0.9, m2: 1.6 })
-      .webp({ quality: 85 })
+      .webp({ quality: 80 })
       .toFile(`${s.out}-${w}.webp`);
   }
 }
