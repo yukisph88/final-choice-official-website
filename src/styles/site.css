@@ -370,3 +370,5 @@ a.lang-switch__item:hover { background: transparent; color: var(--blue); }
 @media (max-width: 1240px) {
   .main-nav { position: absolute; inset: auto; left: 0; right: 0; top: 100%; height: auto; max-height: calc(100dvh - 76px); overflow-y: auto; border-top: 1px solid var(--border); box-shadow: 0 24px 40px -24px rgba(6, 16, 61, .35); padding-bottom: 28px; }
 }
+
+@media (max-width: 1240px) { .main-nav ul a[aria-current='page']::after, .main-nav ul a[aria-current='page']:hover::after { width: 8px; height: 8px; background: none; bottom: auto; left: auto; border-radius: 0; } }
